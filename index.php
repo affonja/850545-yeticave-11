@@ -41,7 +41,7 @@ $lots = [
     ]
 ];
 
-function price_format($price)
+function price_format(int $price): string
 {
     $price = ceil($price);
     if ($price >= 1000) {
