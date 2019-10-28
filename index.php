@@ -47,7 +47,7 @@ function price_format($price)
     if ($price >= 1000) {
         $price = number_format($price, 0, '.', ' ');
     }
-    $price .=" &#8399;";
+    $price .= " р";
     return $price;
 }
 
@@ -133,7 +133,7 @@ $user_name = 'Ольга'; // укажите здесь ваше имя
                             <div class="lot__state">
                                 <div class="lot__rate">
                                     <span class="lot__amount">Стартовая цена</span>
-                                    <span class="lot__cost"><?=price_format($lot['price']); ?></span>
+                                    <span class="lot__cost"><?= price_format($lot['price']); ?></span>
                                 </div>
                                 <div class="lot__timer timer">
                                     12:23
