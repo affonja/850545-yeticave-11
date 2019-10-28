@@ -47,7 +47,7 @@ function price_format($price)
     if ($price >= 1000) {
         $price = number_format($price, 0, '.', ' ');
     }
-    $price .= " р";
+    $price .= " <b class=\"rub\">р</b>";
     return $price;
 }
 
