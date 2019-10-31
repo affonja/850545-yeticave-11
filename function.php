@@ -10,13 +10,14 @@ function price_format(int $price): string
     return $price;
 }
 
-date_default_timezone_set("Europe/Moscow");
-
-function lot_lifetime(string $lot_time): array
+function get_time_remaining(string $time): array
 {
     $time_now = time();
-    $time_end = strtotime($lot_time);
+    $time_end = strtotime($time);
     $time_diff = $time_end - $time_now;
+    if ($time_diff < 0) {
+        $time_diff = 0;
+    }
 
     $time_remaining = [
         floor($time_diff / 3600),
