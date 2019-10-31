@@ -11,8 +11,11 @@
                 <span class="lot__amount">Стартовая цена</span>
                 <span class="lot__cost"><?= price_format($lot['price']); ?></span>
             </div>
-            <div class="lot__timer timer">
-                12:23
+            <?php $time_remaining = get_time_remaining($lot['enddate']); ?>
+            <div class="lot__timer timer <?php if ($time_remaining[0] < 1) {
+                echo 'timer--finishing';
+            } ?>">
+                <?= sprintf("%02d", $time_remaining[0]) . ':' . sprintf("%02d", $time_remaining[1]); ?>
             </div>
         </div>
     </div>
