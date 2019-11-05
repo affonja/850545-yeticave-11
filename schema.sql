@@ -15,7 +15,10 @@ CREATE TABLE lots(
 	img_url VARCHARACTER(255),
 	bet_start FLOAT NOT NULL,
 	enddate TIMESTAMP NOT NULL,
-	bet_step FLOAT NOT NULL
+	bet_step FLOAT NOT NULL,
+	KEY name_indx (NAME),
+	KEY dr_crt_indx (date_create),
+	KEY dt_end_indx (enddate)
 );
 
 CREATE TABLE bets(
