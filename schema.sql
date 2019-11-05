@@ -1,4 +1,4 @@
-CREATE DATABASE Yeticave;
+CREATE DATABASE yeticave;
 USE yeticave;
 
 CREATE TABLE categories(
@@ -9,51 +9,43 @@ CREATE TABLE categories(
 
 CREATE TABLE lots(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	date_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-	NAME VARCHARACTER(128) NOT NULL,
-	descript TEXT,
-	img_url VARCHARACTER(255),
-	bet_start FLOAT NOT NULL,
-	enddate TIMESTAMP NOT NULL,
-	bet_step FLOAT NOT NULL,
-	KEY name_indx (NAME),
-	KEY dr_crt_indx (date_create),
-	KEY dt_end_indx (enddate)
+	creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+	name VARCHARACTER(128) NOT NULL,
+	description TEXT,
+	img VARCHARACTER(255),
+	bet_start INT NOT NULL,
+	end_time TIMESTAMP NOT NULL,
+	bet_step INT NOT NULL,
+	KEY name_idx (name),
+	KEY creation_time_idx (creation_time),
+	KEY end_time_idx (end_time),
+	owner_id INT NOT NULL,
+	winner_id INT NOT NULL,
+	category_id INT NOT NULL
 );
 
 CREATE TABLE bets(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-	summ FLOAT NOT NULL
+	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+	summ INT NOT NULL,
+	user_id INT NOT NULL,
+	lot_id INT NOT NULL
 );
 
 CREATE TABLE users(
 	id INT AUTO_INCREMENT PRIMARY KEY,	
 	date_reg TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
 	email VARCHARACTER(64) NOT NULL UNIQUE,
-	NAME VARCHARACTER(64) NOT NULL,
-	PASSWORD VARCHARACTER(64) NOT NULL,
+	name VARCHARACTER(64) NOT NULL,
+	password VARCHARACTER(64) NOT NULL,
 	contacts VARCHARACTER(255) NOT NULL
 );
 
 ALTER TABLE lots
-	ADD COLUMN autor INT,
-	ADD COLUMN winner INT,
-	ADD COLUMN category INT;
-
-ALTER TABLE lots
-	ADD CONSTRAINT fk_user FOREIGN KEY (autor) REFERENCES users(id),
-	ADD CONSTRAINT fk_winner FOREIGN KEY (winner) REFERENCES users(id),
-	ADD CONSTRAINT fk_cat FOREIGN KEY (category) REFERENCES categories(id);
+	ADD CONSTRAINT fk_user FOREIGN KEY (owner_id) REFERENCES users(id),
+	ADD CONSTRAINT fk_winner FOREIGN KEY (winner_id) REFERENCES users(id),
+	ADD CONSTRAINT fk_cat FOREIGN KEY (category_id) REFERENCES categories(id);
 
 ALTER TABLE bets
-	ADD COLUMN user INT,
-	ADD COLUMN lot INT,
-	ADD CONSTRAINT fk_user_id FOREIGN KEY (user) REFERENCES users(id),
-	ADD CONSTRAINT fk_lot_id FOREIGN KEY (lot) REFERENCES lots(id);
-
-ALTER TABLE users
-	ADD COLUMN lot INT,
-	ADD COLUMN bet INT,
-	ADD CONSTRAINT fk_lots FOREIGN KEY (lot) REFERENCES lots(id),
-	ADD CONSTRAINT fk_bets FOREIGN KEY (bet) REFERENCES bets(id);
+	ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id),
+	ADD CONSTRAINT fk_lot_id FOREIGN KEY (lot_id) REFERENCES lots(id);
