@@ -20,13 +20,13 @@ CREATE TABLE lots(
 	KEY creation_time_idx (creation_time),
 	KEY end_time_idx (end_time),
 	owner_id INT NOT NULL,
-	winner_id INT NOT NULL,
+	winner_id INT,
 	category_id INT NOT NULL
 );
 
 CREATE TABLE bets(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+	creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
 	summ INT NOT NULL,
 	user_id INT NOT NULL,
 	lot_id INT NOT NULL
@@ -34,7 +34,7 @@ CREATE TABLE bets(
 
 CREATE TABLE users(
 	id INT AUTO_INCREMENT PRIMARY KEY,	
-	date_reg TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+	creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
 	email VARCHARACTER(64) NOT NULL UNIQUE,
 	name VARCHARACTER(64) NOT NULL,
 	password VARCHARACTER(64) NOT NULL,
