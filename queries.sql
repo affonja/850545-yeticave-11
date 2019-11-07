@@ -55,12 +55,12 @@
 #стартовую цену, ссылку на изображение, цену, название категории;
 	SELECT
 		l.name, l.bet_start,
-		l.img, b.summ,
+		l.img, b.sum,
 		cat.name
 	FROM lots l
 	INNER JOIN categories cat ON l.category_id = cat.id
 	LEFT JOIN bets b ON l.id=b.lot_id AND
-		b.summ=(SELECT MAX(b.summ) FROM bets b WHERE b.lot_id=l.id)
+		b.sum=(SELECT MAX(b.sum) FROM bets b WHERE b.lot_id=l.id)
 	WHERE l.end_time > NOW()
 	ORDER BY l.creation_time DESC LIMIT 3
 
@@ -79,6 +79,6 @@
 	WHERE id=5;
 
 #получить список ставок для лота по его идентификатору с сортировкой по дате.
-	SELECT summ, creation_time FROM bets
+	SELECT sum, creation_time FROM bets
 	WHERE lot_id =1
 	ORDER BY creation_time  DESC;
