@@ -54,32 +54,31 @@
 # получить самые новые, открытые лоты. Каждый лот должен включать название,
 # стартовую цену, ссылку на изображение, цену, название категории;
 	SELECT
-	    l.id
-		l.name, l.bet_start,
-		l.img, b.sum,
-		cat.name
+		l.id, l.name, l.bet_start,
+		l.img, MAX(b.sum),
+		c.name
 	FROM lots l
-	INNER JOIN categories cat ON l.category_id = cat.id
-	LEFT JOIN bets b ON l.id=b.lot_id AND
-		b.sum=(SELECT MAX(b.sum) FROM bets b WHERE b.lot_id=l.id)
+	INNER JOIN categories c ON l.category_id = c.id
+	LEFT JOIN bets b ON l.id = b.lot_id
 	WHERE l.end_time > NOW()
+    GROUP BY l.id
 	ORDER BY l.creation_time DESC LIMIT 3
 
-# # показать лот по его id. Получите также название категории, к которой принадлежит лот;
+# показать лот по его id. Получите также название категории, к которой принадлежит лот;
 	SELECT
 		l.creation_time, l.name, l.img,
 		l.bet_start, l.end_time, l.bet_step,
-		l.owner_id, l.category_id, c.name
+		l.owner_id, l.category_id, c.name AS category_name
 	FROM lots l
 	INNER JOIN categories c ON l.category_id = c.id
-	WHERE l.id=5;
+	WHERE l.id = 5;
 
 # обновить название лота по его идентификатору;
 	UPDATE lots
-	SET name='new name'
-	WHERE id=5;
+	SET name = 'new name'
+	WHERE id = 5;
 
 # получить список ставок для лота по его идентификатору с сортировкой по дате.
 	SELECT sum, creation_time FROM bets
-	WHERE lot_id =1
+	WHERE lot_id = 1
 	ORDER BY creation_time  DESC;
