@@ -11,6 +11,7 @@ function price_format(int $price): string
 }
 
 function get_time_remaining(string $time): array
+//todo формат чч.мм.сс
 {
     $time_now = time();
     $time_end = strtotime($time);

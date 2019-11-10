@@ -9,9 +9,9 @@
         <div class="lot__state">
             <div class="lot__rate">
                 <span class="lot__amount">Стартовая цена</span>
-                <span class="lot__cost"><?= price_format($lot['price']); ?></span>
+                <span class="lot__cost"><?= price_format($lot['bet_start']); ?></span>
             </div>
-            <?php $time_remaining = get_time_remaining($lot['enddate']); ?>
+            <?php $time_remaining = get_time_remaining($lot['end_time']); ?>
             <div class="lot__timer timer <?php if ($time_remaining[0] < 1) {
                 echo 'timer--finishing';
             } ?>">
