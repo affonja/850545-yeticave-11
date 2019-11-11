@@ -5,7 +5,7 @@ if (!$link) {
     $error = mysqli_connect_error();
     $page_content = include_template('error.php', ['error' => $error]);
 } else {
-    $sql_cat = 'SELECT `id`, `name` FROM categories';
+    $sql_cat = 'SELECT id, name, code FROM categories';
     $result_category = mysqli_query($link, $sql_cat);
 
     if ($result_category) {
@@ -48,5 +48,8 @@ SQL;
 
 print(include_template('index.php', [
     'page_content' => $page_content,
-    'categories' => $categories
+    'categories' => $categories,
+    'page_title' => $page_title,
+    'user_name' => $user_name,
+    'is_auth' => $is_auth
 ]));
