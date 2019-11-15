@@ -77,15 +77,15 @@
                                 <span class="lot-item__amount">Текущая цена</span>
                                 <span class="lot-item__cost">
                                     <?php
-                                    $act_price = (!maxbet) ? $lot['bet_start'] : $lot['maxbet'];
-                                    echo price_format( $act_price);
+                                    $current_price = $lot['maxbet'] ?? $lot['bet_start'];
+                                    echo price_format( $current_price);
                                     ?>
                                     </span>
                             </div>
                             <div class="lot-item__min-cost">
                                 Мин. ставка <span>
                                     <?php
-                                    $minbet = $lot['maxbet']+$lot['bet_step'];
+                                    $minbet = $current_price+$lot['bet_step'];
                                     echo price_format($minbet).' р';
                                 ?></span>
                             </div>

@@ -69,7 +69,7 @@ function getActiveLots($connection)
 	LEFT JOIN bets b ON l.id = b.lot_id
 	WHERE l.end_time > NOW()
     GROUP BY l.id
-	ORDER BY l.creation_time DESC LIMIT 6
+	ORDER BY l.creation_time DESC LIMIT 60
 SQL;
     $result = mysqli_query($connection, $sql);
 
@@ -94,7 +94,7 @@ SELECT
 FROM lots l
 INNER JOIN categories c ON category_id = c.id
 LEFT JOIN bets b ON b.lot_id = l.id
-WHERE l.id = 1;
+WHERE l.id = $id;
 SQL;
 
     $result = mysqli_query($connection, $sql);
