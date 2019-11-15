@@ -13,7 +13,12 @@
     <header class="main-header">
         <div class="main-header__container container">
             <h1 class="visually-hidden">YetiCave</h1>
-            <a class="main-header__logo">
+            <a class="main-header__logo"
+                <?php
+                if ($_SERVER['PHP_SELF'] !== '/index.php') {
+                    echo 'href="/index.php"';
+                }; ?>
+            >
                 <img src="../img/logo.svg" width="160" height="39"
                      alt="Логотип компании YetiCave">
             </a>
@@ -56,15 +61,7 @@
 </div>
 
 <footer class="main-footer">
-    <nav class="nav">
-        <ul class="nav__list container">
-            <?php foreach ($categories as $category) : ?>
-                <li class="nav__item">
-                    <a href="pages/all-lots.html"><?= $category['name']; ?></a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </nav>
+<?= include_template('nav.php', ['categories'  => $categories])?>
     <div class="main-footer__bottom container">
         <div class="main-footer__copyright">
             <p>© 2019, YetiCave</p>

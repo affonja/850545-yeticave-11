@@ -19,11 +19,17 @@ if ($lot_id) {
         ]);
     } else {
         http_response_code(404);
-        $page_content = include_template('404.php', ['error' => $lot]);
+        $page_content = include_template('404.php', [
+            'error'      => $lot,
+            'categories' => $categories
+        ]);
     }
 } else {
     http_response_code(404);
-    $page_content = include_template('404.php', ['error' => 'Лот не найден']);
+    $page_content = include_template('404.php', [
+        'error'      => $lot,
+        'categories' => $categories
+    ]);
 }
 
 print(include_template('layout.php', [
