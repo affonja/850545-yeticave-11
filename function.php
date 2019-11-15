@@ -6,7 +6,6 @@ function price_format(int $price): string
     if ($price >= 1000) {
         $price = number_format($price, 0, '.', ' ');
     }
-    $price .= ' <b class="rub">р</b>';
     return $price;
 }
 
@@ -78,6 +77,33 @@ SQL;
         $result = mysqli_error($connection);
     } else {
         $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return $result;
+}
+
+function getLot($connection, $id)
+{
+    $sql = <<<SQL
+SELECT
+		l.id, l.name, l.img, l.description,
+        l.bet_start, l.bet_step,
+		l.creation_time, l.end_time,
+		c.name AS category,
+		MAX(b.sum) as maxbet
+FROM lots l
+INNER JOIN categories c ON category_id = c.id
+LEFT JOIN bets b ON b.lot_id = l.id
+WHERE l.id = 1;
+SQL;
+
+    $result = mysqli_query($connection, $sql);
+
+    if (!mysqli_num_rows($result)) {
+        http_response_code(404);
+        $result = 'Лот не найден';
+    } else {
+        $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
 
     return $result;
