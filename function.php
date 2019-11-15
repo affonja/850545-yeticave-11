@@ -94,16 +94,16 @@ SELECT
 FROM lots l
 INNER JOIN categories c ON category_id = c.id
 LEFT JOIN bets b ON b.lot_id = l.id
-WHERE l.id = ?;
+WHERE l.id = ?
+    GROUP BY l.id
 SQL;
 
     $stmt = mysqli_prepare($connection, $sql);
-    mysqli_stmt_bind_param($stmt, 'i', $id);
+    mysqli_stmt_bind_param($stmt, 'i',$id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    if (!$result) {
-        http_response_code(404);
+    if (!mysqli_num_rows($result)) {
         $result = 'Лот не найден';
     } else {
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);

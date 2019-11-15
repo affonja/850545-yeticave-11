@@ -16,7 +16,6 @@
         <h2>Открытые лоты</h2>
     </div>
     <ul class="lots__list">
-        <!--заполните этот список из массива с товарами-->
         <?php foreach ($lots as $lot) : ?>
             <?= include_template('lot_preview.php', ['lot' => $lot]); ?>
         <?php endforeach; ?>
