@@ -10,25 +10,17 @@ if (is_array($categories)) {
 }
 
 $lot_id = filter_input(INPUT_GET, 'id');
-if ($lot_id) {
-    $lot = getLot($connection['link'], $lot_id);
-    if (is_array($lot)) {
-        $page_content = include_template('lot.php', [
-            'categories' => $categories,
-            'lot'        => $lot
-        ]);
-    } else {
-        http_response_code(404);
-        $page_content = include_template('404.php', [
-            'error'      => $lot,
-            'categories' => $categories
-        ]);
-    }
-} else {
+$lot = getLot($connection['link'], $lot_id);
+if (!$lot_id or !is_array($lot)) {
     http_response_code(404);
     $page_content = include_template('404.php', [
         'error'      => $lot,
         'categories' => $categories
+    ]);
+} else {
+    $page_content = include_template('lot.php', [
+        'categories' => $categories,
+        'lot'        => $lot
     ]);
 }
 

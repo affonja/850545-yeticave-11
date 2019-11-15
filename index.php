@@ -26,9 +26,9 @@ if (!$connection['link']) {
 }
 
 print(include_template('layout.php', [
-    'page_title' => 'Главная',
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
+    'page_title'   => 'Главная',
+    'is_auth'      => $is_auth,
+    'user_name'    => $user_name,
     'page_content' => $page_content,
     'categories'   => $categories
 ]));

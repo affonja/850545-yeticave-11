@@ -61,7 +61,7 @@
 </div>
 
 <footer class="main-footer">
-<?= include_template('nav.php', ['categories'  => $categories])?>
+    <?= include_template('nav.php', ['categories' => $categories]) ?>
     <div class="main-footer__bottom container">
         <div class="main-footer__copyright">
             <p>© 2019, YetiCave</p>
