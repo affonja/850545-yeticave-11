@@ -25,10 +25,10 @@ if (!$connection['link']) {
     }
 }
 
-print(include_template('index.php', [
+print(include_template('layout.php', [
+    'page_title' => 'Главная',
+    'is_auth' => $is_auth,
+    'user_name' => $user_name,
     'page_content' => $page_content,
-    'categories'   => $categories,
-    'page_title'   => $page_title,
-    'user_name'    => $user_name,
-    'is_auth'      => $is_auth
+    'categories'   => $categories
 ]));
