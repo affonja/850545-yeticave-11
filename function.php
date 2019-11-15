@@ -26,3 +26,59 @@ function get_time_remaining(string $time): array
 
     return $time_remaining;
 }
+
+function dbConnect(array $db): array
+{
+    $connection = [
+        'link'  => '',
+        'error' => ''
+    ];
+
+    $connection['link'] = mysqli_connect($db['host'], $db['user'],
+        $db['password'], $db['database']);
+    if (!$connection['link']) {
+        $connection['error'] = mysqli_connect_error();
+    } else {
+        mysqli_set_charset($connection['link'], "utf8");
+    }
+    return $connection;
+}
+
+function getCategories($connection)
+{
+    $sql = 'SELECT id, name, code FROM categories';
+    $result = mysqli_query($connection, $sql);
+
+    if (!$result) {
+        $result = mysqli_error($connection);
+    } else {
+        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+    return $result;
+}
+
+function getActiveLots($connection)
+{
+
+    $sql = <<<SQL
+	SELECT
+		l.id, l.name, l.bet_start,
+		l.img, l.end_time,
+		c.name AS category
+	FROM lots l
+	INNER JOIN categories c ON l.category_id = c.id
+	LEFT JOIN bets b ON l.id = b.lot_id
+	WHERE l.end_time > NOW()
+    GROUP BY l.id
+	ORDER BY l.creation_time DESC LIMIT 6
+SQL;
+    $result = mysqli_query($connection, $sql);
+
+    if (!$result) {
+        $result = mysqli_error($connection);
+    } else {
+        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return $result;
+}
