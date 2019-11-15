@@ -7,6 +7,7 @@
     <link href="../css/style.css" rel="stylesheet">
 </head>
 <body>
+
 <div class="page-wrapper">
 
     <header class="main-header">
@@ -50,7 +51,10 @@
         </div>
     </header>
 
-    <main class="container"><?= $page_content; ?></main>
+    <main class="<?php
+    if ($_SERVER['PHP_SELF'] == '/index.php') {
+        echo 'container';
+    }; ?>"><?= $page_content; ?></main>
 </div>
 
 <footer class="main-footer">
