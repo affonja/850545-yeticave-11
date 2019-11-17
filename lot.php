@@ -24,6 +24,10 @@ if (!$lot_id or !is_array($lot)) {
     ]);
 }
 
+//if (isset($_GET['success'])){
+//    $msg =  '<p>Лот дабавлен</p>';
+//}
+
 print(include_template('layout.php', [
     'page_title'   => $lot['name'] ?? 'Ошибка',
     'is_auth'      => $is_auth,
