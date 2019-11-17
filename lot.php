@@ -9,7 +9,7 @@ if (is_array($categories)) {
     $page_content = include_template('error.php', ['error' => $categories]);
 }
 
-$lot_id = filter_input(INPUT_GET, 'id');
+$lot_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $lot = getLot($connection['link'], $lot_id);
 if (!$lot_id or !is_array($lot)) {
     http_response_code(404);

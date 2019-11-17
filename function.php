@@ -43,7 +43,7 @@ function dbConnect(array $db): array
     return $connection;
 }
 
-function getCategories($connection)
+function getCategories(mysqli $connection)
 {
     $sql = 'SELECT id, name, code FROM categories';
     $result = mysqli_query($connection, $sql);
@@ -56,7 +56,7 @@ function getCategories($connection)
     return $result;
 }
 
-function getActiveLots($connection)
+function getActiveLots(mysqli $connection)
 {
 
     $sql = <<<SQL
@@ -82,7 +82,7 @@ SQL;
     return $result;
 }
 
-function getLot($connection, $id)
+function getLot(mysqli $connection,int $id): ?array
 {
     $sql = <<<SQL
 SELECT
@@ -103,11 +103,10 @@ SQL;
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    if (!mysqli_num_rows($result)) {
-        $result = 'Лот не найден';
-    } else {
-        $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    $lot = null;
+    if ($result){
+        $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
 
-    return $result;
+    return $lot;
 }
