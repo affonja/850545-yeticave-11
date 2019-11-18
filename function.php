@@ -69,7 +69,7 @@ function getActiveLots($connection)
 	LEFT JOIN bets b ON l.id = b.lot_id
 	WHERE l.end_time > NOW()
     GROUP BY l.id
-	ORDER BY l.creation_time DESC LIMIT 60
+	ORDER BY l.creation_time DESC LIMIT 6
 SQL;
     $result = mysqli_query($connection, $sql);
 
@@ -110,4 +110,35 @@ SQL;
     }
 
     return $result;
+}
+
+
+//------------
+function validateCategory($id, $category_list)
+{
+    if (!in_array($id, $category_list)) {
+        return "Не выбрана категория";
+    }
+    return null;
+}
+
+function validateLength($value, $min, $max)
+{
+    if ($value) {
+        $len = strlen($value);
+        if ($len < $min or $len > $max) {
+            return "Значение должно быть от $min до $max символов";
+        }
+    }
+    return null;
+}
+
+function validateNumber($values)
+{
+    if ($values) {
+        if (!is_int($values)){
+            return 'Некорректное число';
+        }
+    }
+    return null;
 }
