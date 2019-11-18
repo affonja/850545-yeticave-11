@@ -6,12 +6,12 @@ if (!$connection['link']) {
         ['error' => $connection['error']]);
 } else {
 
-    $categories = getCategories($connection['link']);
-    if (is_array($categories)) {
+    $categories = getCategories($connection['link'], $error);
+    if ($categories) {
         $page_content = include_template('main.php',
             ['categories' => $categories]);
     } else {
-        $page_content = include_template('error.php', ['error' => $categories]);
+        $page_content = include_template('error.php', ['error' => $error]);
     }
 
     $lot_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);

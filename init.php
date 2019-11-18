@@ -7,6 +7,7 @@ require_once('data.php');
 
 $connection = dbConnect($config['db']);
 
+$error='';
 $categories = [];
 $page_content = '';
 

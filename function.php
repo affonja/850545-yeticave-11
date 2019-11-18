@@ -43,20 +43,19 @@ function dbConnect(array $db): array
     return $connection;
 }
 
-function getCategories(mysqli $connection)
+function getCategories(mysqli $connection, string  &$error):?array
 {
     $sql = 'SELECT id, name, code FROM categories';
     $result = mysqli_query($connection, $sql);
+    $error = mysqli_error($connection);
 
-    if (!$result) {
-        $result = mysqli_error($connection);
-    } else {
-        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($result) {
+        return $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
-    return $result;
+    return null;
 }
 
-function getActiveLots(mysqli $connection)
+function getActiveLots(mysqli $connection, string &$error):?array
 {
 
     $sql = <<<SQL
@@ -69,17 +68,15 @@ function getActiveLots(mysqli $connection)
 	LEFT JOIN bets b ON l.id = b.lot_id
 	WHERE l.end_time > NOW()
     GROUP BY l.id
-	ORDER BY l.creation_time DESC LIMIT 60
+	ORDER BY l.creation_time DESC LIMIT 6
 SQL;
     $result = mysqli_query($connection, $sql);
+    $error = mysqli_error($connection);
 
-    if (!$result) {
-        $result = mysqli_error($connection);
-    } else {
-        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($result) {
+        return $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
-
-    return $result;
+    return null;
 }
 
 function getLot(mysqli $connection,int $id): ?array

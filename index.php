@@ -5,23 +5,22 @@ if (!$connection['link']) {
     $page_content = include_template('error.php',
         ['error' => $connection['error']]);
 } else {
-
-    $categories = getCategories($connection['link']);
-    if (is_array($categories)) {
+    $categories = getCategories($connection['link'], $error);
+    if ($categories) {
         $page_content = include_template('main.php',
             ['categories' => $categories]);
     } else {
-        $page_content = include_template('error.php', ['error' => $categories]);
+        $page_content = include_template('error.php', ['error' => $error]);
     }
 
-    $lots = getActiveLots($connection['link']);
-    if (is_array($lots)) {
+    $lots = getActiveLots($connection['link'], $error);
+    if ($lots) {
         $page_content = include_template('main.php', [
             'categories' => $categories,
             'lots'       => $lots
         ]);
     } else {
-        $page_content = include_template('error.php', ['error' => $lots]);
+        $page_content = include_template('error.php', ['error' => $error]);
     }
 }
 
