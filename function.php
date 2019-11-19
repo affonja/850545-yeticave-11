@@ -6,7 +6,6 @@ function price_format(int $price): string
     if ($price >= 1000) {
         $price = number_format($price, 0, '.', ' ');
     }
-    $price .= ' <b class="rub">р</b>';
     return $price;
 }
 
@@ -44,20 +43,19 @@ function dbConnect(array $db): array
     return $connection;
 }
 
-function getCategories($connection)
+function getCategories(mysqli $connection, string  &$error):?array
 {
     $sql = 'SELECT id, name, code FROM categories';
     $result = mysqli_query($connection, $sql);
+    $error = mysqli_error($connection);
 
-    if (!$result) {
-        $result = mysqli_error($connection);
-    } else {
-        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($result) {
+        return $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
-    return $result;
+    return null;
 }
 
-function getActiveLots($connection)
+function getActiveLots(mysqli $connection, string &$error):?array
 {
 
     $sql = <<<SQL
@@ -73,12 +71,39 @@ function getActiveLots($connection)
 	ORDER BY l.creation_time DESC LIMIT 6
 SQL;
     $result = mysqli_query($connection, $sql);
+    $error = mysqli_error($connection);
 
-    if (!$result) {
-        $result = mysqli_error($connection);
-    } else {
-        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($result) {
+        return $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+    return null;
+}
+
+function getLot(mysqli $connection,int $id): ?array
+{
+    $sql = <<<SQL
+SELECT
+		l.id, l.name, l.img, l.description,
+        l.bet_start, l.bet_step,
+		l.creation_time, l.end_time,
+		c.name AS category,
+		MAX(b.sum) as maxbet
+FROM lots l
+INNER JOIN categories c ON category_id = c.id
+LEFT JOIN bets b ON b.lot_id = l.id
+WHERE l.id = ?
+    GROUP BY l.id
+SQL;
+
+    $stmt = mysqli_prepare($connection, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $lot = null;
+    if ($result){
+        $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
 
-    return $result;
+    return $lot;
 }
