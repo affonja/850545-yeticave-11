@@ -1,33 +1,34 @@
 <?php
 require_once('init.php');
 
-$categories = getCategories($connection['link']);
-if (is_array($categories)) {
-    $page_content = include_template('main.php',
-        ['categories' => $categories]);
+if (!$connection['link']) {
+    $page_content = include_template('error.php',
+        ['error' => $connection['error']]);
 } else {
-    $page_content = include_template('error.php', ['error' => $categories]);
+
+    $categories = getCategories($connection['link'], $error);
+    if ($categories) {
+        $page_content = include_template('main.php',
+            ['categories' => $categories]);
+    } else {
+        $page_content = include_template('error.php', ['error' => $error]);
+    }
+
+    $lot_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    $lot = getLot($connection['link'], $lot_id);
+    if (!$lot_id or !is_array($lot)) {
+        http_response_code(404);
+        $page_content = include_template('404.php', [
+            'error'      => $lot,
+            'categories' => $categories
+        ]);
+    } else {
+        $page_content = include_template('lot.php', [
+            'categories' => $categories,
+            'lot'        => $lot
+        ]);
+    }
 }
-
-$lot_id = filter_input(INPUT_GET, 'id');
-$lot = getLot($connection['link'], $lot_id);
-if (!$lot_id or !is_array($lot)) {
-    http_response_code(404);
-    $page_content = include_template('404.php', [
-        'error'      => $lot,
-        'categories' => $categories
-    ]);
-} else {
-    $page_content = include_template('lot.php', [
-        'categories' => $categories,
-        'lot'        => $lot
-    ]);
-}
-
-//if (isset($_GET['success'])){
-//    $msg =  '<p>Лот дабавлен</p>';
-//}
-
 print(include_template('layout.php', [
     'page_title'   => $lot['name'] ?? 'Ошибка',
     'is_auth'      => $is_auth,

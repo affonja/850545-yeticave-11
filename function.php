@@ -42,20 +42,19 @@ function dbConnect(array $db): array
     return $connection;
 }
 
-function getCategories($connection)
+function getCategories(mysqli $connection, string  &$error):?array
 {
     $sql = 'SELECT id, name, code FROM categories';
     $result = mysqli_query($connection, $sql);
+    $error = mysqli_error($connection);
 
-    if (!$result) {
-        $result = mysqli_error($connection);
-    } else {
-        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($result) {
+        return $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
-    return $result;
+    return null;
 }
 
-function getActiveLots($connection)
+function getActiveLots(mysqli $connection, string &$error):?array
 {
 
     $sql = <<<SQL
@@ -71,17 +70,15 @@ function getActiveLots($connection)
 	ORDER BY l.creation_time DESC LIMIT 6
 SQL;
     $result = mysqli_query($connection, $sql);
+    $error = mysqli_error($connection);
 
-    if (!$result) {
-        $result = mysqli_error($connection);
-    } else {
-        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($result) {
+        return $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
-
-    return $result;
+    return null;
 }
 
-function getLot($connection, $id)
+function getLot(mysqli $connection,int $id): ?array
 {
     $sql = <<<SQL
 SELECT
@@ -102,13 +99,12 @@ SQL;
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    if (!mysqli_num_rows($result)) {
-        $result = 'Лот не найден';
-    } else {
-        $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    $lot = null;
+    if ($result){
+        $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
 
-    return $result;
+    return $lot;
 }
 
 function validateCategory($id, $category_list)
