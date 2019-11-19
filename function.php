@@ -158,12 +158,12 @@ function is_interval_valid($value, string $interval): bool
 }
 
 function getValidateForm(
-    array &$lot,
+    array &$post_arr,
     array $rules,
     array $errors,
     array $required
 ): array {
-    foreach ($lot as $field => $value) {
+    foreach ($post_arr as $field => $value) {
         if (isset($rules[$field])) {
             $rule = $rules[$field];
             $errors[$field] = $rule($value);
@@ -174,12 +174,10 @@ function getValidateForm(
         }
     }
 
-    $errors['file'] = getValidateFile($lot);
-
     return $errors;
 }
 
-function getValidateFile(array &$lot):?string
+function getValidateFile(array &$post_arr):?string
 {
     if ($_FILES['lot_img']['name']) {
         $path = $_FILES['lot_img']['tmp_name'];
@@ -196,9 +194,9 @@ function getValidateFile(array &$lot):?string
             $ext = substr($file_name, strrpos($file_name, '.'));
             $file_name = uniqid().$ext;
 
-            $lot['img'] = '/uploads/'.$file_name;
+            $post_arr['img'] = '/uploads/'.$file_name;
             move_uploaded_file($_FILES['lot_img']['tmp_name'],
-                substr($lot['img'], 1));
+                substr($post_arr['img'], 1));
         }
     } else {
         return $error = 'Не загружен файл';
