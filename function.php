@@ -225,7 +225,7 @@ SQL;
     return null;
 }
 
-function getPostVal(string $name):string
+function getPostVal(string $name):?string
 {
     return filter_input(INPUT_POST, $name);
 }
