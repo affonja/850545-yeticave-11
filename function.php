@@ -112,8 +112,6 @@ SQL;
     return $result;
 }
 
-
-//------------
 function validateCategory($id, $category_list)
 {
     if (!in_array($id, $category_list)) {
@@ -133,12 +131,39 @@ function validateLength($value, $min, $max)
     return null;
 }
 
-function validateNumber($values)
+function validatePrice($values)
 {
     if ($values) {
-        if (!is_int($values)){
+        if (!is_float($values) or ($values < 0)) {
             return 'Некорректное число';
         }
     }
     return null;
 }
+
+function validateBetStep($values)
+{
+    if ($values) {
+        if (!is_int($values) or ($values < 0)) {
+            return 'Некорректное число';
+        }
+    }
+    return null;
+}
+
+function getPostVal($name)
+{
+    return filter_input(INPUT_POST, $name);
+}
+
+function getValidPeriod($date, $per)
+{
+    $now = new DateTime();
+    $interval = new DateInterval('P'.$per);
+    $min_date = date_format(date_add($now, $interval), 'Y-m-d');
+    if ($date >= $min_date) {
+        return true;
+    }
+    return false;
+}
+
