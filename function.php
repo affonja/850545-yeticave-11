@@ -217,6 +217,8 @@ VALUES (
        ?,?,?,?,?,?,?,NOW(),1
 )
 SQL;
+    $lot['lot-rate'] *= 100;
+    $lot['lot-step'] *= 100;
     $stmt = db_get_prepare_stmt($connection, $sql, $lot);
     $result = mysqli_stmt_execute($stmt);
     if ($result) {
