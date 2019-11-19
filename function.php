@@ -1,5 +1,4 @@
 <?php
-
 function price_format(int $price): string
 {
     $price = ceil($price);
@@ -165,5 +164,65 @@ function getValidPeriod($date, $per)
         return true;
     }
     return false;
+}
+
+function getValidateForm(array &$lot, array $rules, array $errors, array $required){
+    foreach ($lot as $field => $value) {
+        if (isset($rules[$field])) {
+            $rule = $rules[$field];
+            $errors[$field] = $rule($value);
+        }
+
+        if (in_array($field, $required) && empty($value)) {
+            $errors[$field] = "Заполните поле";
+        }
+    }
+
+    $errors['file'] = getValidateFile($lot);
+
+    return $errors;
+}
+
+function getValidateFile(&$lot){
+    if ($_FILES['lot_img']['name']) {
+        $path = $_FILES['lot_img']['tmp_name'];
+        $file_type = mime_content_type($path);
+        $allow_type = [
+            'image/png',
+            'image/jpeg'
+        ];
+
+        if (!in_array($file_type, $allow_type)) {
+            return $error = 'Неверный формат файла';
+        } else {
+            $file_name = $_FILES['lot_img']['name'];
+            $ext = substr($file_name, strrpos($file_name, '.'));
+            $file_name = uniqid().$ext;
+
+            $lot['img'] = '/uploads/'.$file_name;
+            move_uploaded_file($_FILES['lot_img']['tmp_name'], substr($lot['img'],1) );
+        }
+    } else {
+        return $error = 'Не загружен файл';
+    }
+    return null;
+}
+
+function getAddLot($connection, $lot){
+    $sql = <<<SQL
+INSERT INTO lots (
+name, category_id, description,
+bet_start, bet_step, end_time,
+img, creation_time,  owner_id )
+VALUES (
+       ?,?,?,?,?,?,?,NOW(),1
+)
+SQL;
+    $stmt = db_get_prepare_stmt($connection, $sql, $lot);
+    $result = mysqli_stmt_execute($stmt);
+    if ($result){
+        return true;
+    }
+    return null;
 }
 
