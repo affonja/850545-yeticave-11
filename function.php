@@ -42,7 +42,7 @@ function dbConnect(array $db): array
     return $connection;
 }
 
-function getCategories(mysqli $connection, string  &$error):?array
+function getCategories(mysqli $connection, string &$error): ?array
 {
     $sql = 'SELECT id, name, code FROM categories';
     $result = mysqli_query($connection, $sql);
@@ -54,7 +54,7 @@ function getCategories(mysqli $connection, string  &$error):?array
     return null;
 }
 
-function getActiveLots(mysqli $connection, string &$error):?array
+function getActiveLots(mysqli $connection, string &$error): ?array
 {
 
     $sql = <<<SQL
@@ -78,7 +78,7 @@ SQL;
     return null;
 }
 
-function getLot(mysqli $connection,int $id): ?array
+function getLot(mysqli $connection, int $id): ?array
 {
     $sql = <<<SQL
 SELECT
@@ -100,22 +100,22 @@ SQL;
     $result = mysqli_stmt_get_result($stmt);
 
     $lot = null;
-    if ($result){
+    if ($result) {
         $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
 
     return $lot;
 }
 
-function validateCategory($id, $category_list)
+function validateCategory($value, array $category_list): ?string
 {
-    if (!in_array($id, $category_list)) {
+    if (!in_array($value, $category_list)) {
         return "Не выбрана категория";
     }
     return null;
 }
 
-function validateLength($value, $min, $max)
+function validateLength($value, int $min, int $max): ?string
 {
     if ($value) {
         $len = strlen($value);
@@ -126,43 +126,43 @@ function validateLength($value, $min, $max)
     return null;
 }
 
-function validatePrice($values)
+function validatePrice($value): ?string
 {
-    if ($values) {
-        if (!is_float($values) or ($values < 0)) {
+    if ($value) {
+        if (!is_float($value) or ($value < 0)) {
             return 'Некорректное число';
         }
     }
     return null;
 }
 
-function validateBetStep($values)
+function validateBetStep($value): ?string
 {
-    if ($values) {
-        if (!is_int($values) or ($values < 0)) {
+    if ($value) {
+        if (!is_int($value) or ($value < 0)) {
             return 'Некорректное число';
         }
     }
     return null;
 }
 
-function getPostVal($name)
-{
-    return filter_input(INPUT_POST, $name);
-}
-
-function getValidPeriod($date, $per)
+function is_interval_valid($value, string $interval): bool
 {
     $now = new DateTime();
-    $interval = new DateInterval('P'.$per);
-    $min_date = date_format(date_add($now, $interval), 'Y-m-d');
-    if ($date >= $min_date) {
+    $min_interval = new DateInterval($interval);
+    $min_date = date_format(date_add($now, $min_interval), 'Y-m-d');
+    if ($value >= $min_date) {
         return true;
     }
     return false;
 }
 
-function getValidateForm(array &$lot, array $rules, array $errors, array $required){
+function getValidateForm(
+    array &$lot,
+    array $rules,
+    array $errors,
+    array $required
+): array {
     foreach ($lot as $field => $value) {
         if (isset($rules[$field])) {
             $rule = $rules[$field];
@@ -179,7 +179,8 @@ function getValidateForm(array &$lot, array $rules, array $errors, array $requir
     return $errors;
 }
 
-function getValidateFile(&$lot){
+function getValidateFile(array &$lot):?string
+{
     if ($_FILES['lot_img']['name']) {
         $path = $_FILES['lot_img']['tmp_name'];
         $file_type = mime_content_type($path);
@@ -196,7 +197,8 @@ function getValidateFile(&$lot){
             $file_name = uniqid().$ext;
 
             $lot['img'] = '/uploads/'.$file_name;
-            move_uploaded_file($_FILES['lot_img']['tmp_name'], substr($lot['img'],1) );
+            move_uploaded_file($_FILES['lot_img']['tmp_name'],
+                substr($lot['img'], 1));
         }
     } else {
         return $error = 'Не загружен файл';
@@ -204,7 +206,8 @@ function getValidateFile(&$lot){
     return null;
 }
 
-function getAddLot($connection, $lot){
+function getAddLot(mysqli $connection, array $lot):bool
+{
     $sql = <<<SQL
 INSERT INTO lots (
 name, category_id, description,
@@ -216,9 +219,13 @@ VALUES (
 SQL;
     $stmt = db_get_prepare_stmt($connection, $sql, $lot);
     $result = mysqli_stmt_execute($stmt);
-    if ($result){
+    if ($result) {
         return true;
     }
     return null;
 }
 
+function getPostVal(string $name):string
+{
+    return filter_input(INPUT_POST, $name);
+}

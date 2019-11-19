@@ -5,7 +5,7 @@ if (!$connection['link']) {
     $page_content = include_template('error.php',
         ['error' => $connection['error']]);
 } else {
-    $categories = getCategories($connection['link']);
+    $categories = getCategories($connection['link'], $error);
     if (is_array($categories)) {
         $cat_ids = array_column($categories, 'id');
         $page_content = include_template('main.php',
@@ -34,15 +34,15 @@ if (!$connection['link']) {
             'message'  => function ($value) {
                 return validateLength($value, 10, 3000);
             },
-            'lot-rate' => function ($values) {
-                return validatePrice($values);
+            'lot-rate' => function ($value) {
+                return validatePrice($value);
             },
-            'lot-step' => function ($values) {
-                return validateBetStep($values);
+            'lot-step' => function ($value) {
+                return validateBetStep($value);
             },
-            'lot-date' => function ($values) {
-                if ($dt = is_date_valid($values) and
-                    $tmpp = getValidPeriod($values, '1D')
+            'lot-date' => function ($value) {
+                if (is_date_valid($value) and
+                    is_interval_valid($value, 'P1D')
                 ) {
                     return null;
                 } else {
@@ -82,7 +82,6 @@ if (!$connection['link']) {
             'lot'        => $lot
         ]);
     }
-
 }
 
 

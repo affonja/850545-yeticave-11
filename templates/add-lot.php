@@ -37,7 +37,7 @@
     <div class="form__item form__item--wide  <?= $classname; ?>">
         <label for="message">Описание <sup>*</sup></label>
         <textarea id="message" name="message"
-                  placeholder="Напишите описание лота"><?=getPostVal('message'); ?></textarea>
+                  placeholder="Напишите описание лота"><?= getPostVal('message'); ?></textarea>
         <span class="form__error"><?= $errors['message'] ?></span>
     </div>
     <?php $classname = isset($errors['file']) ? "form__item--invalid"
@@ -57,7 +57,8 @@
             : ""; ?>
         <div class="form__item form__item--small  <?= $classname; ?>">
             <label for="lot-rate">Начальная цена <sup>*</sup></label>
-            <input id="lot-rate" type="text" name="lot-rate" placeholder="0" <?= 'value="'
+            <input id="lot-rate" type="text" name="lot-rate"
+                   placeholder="0" <?= 'value="'
             .getPostVal('lot-rate').'"'; ?>>
             <span class="form__error"><?= $errors['lot-rate'] ?></span>
         </div>
@@ -65,7 +66,8 @@
             : ""; ?>
         <div class="form__item form__item--small  <?= $classname; ?>">
             <label for="lot-step">Шаг ставки <sup>*</sup></label>
-            <input id="lot-step" type="text" name="lot-step" placeholder="0" <?= 'value="'
+            <input id="lot-step" type="text" name="lot-step"
+                   placeholder="0" <?= 'value="'
             .getPostVal('lot-step').'"'; ?>>
             <span class="form__error"><?= $errors['lot-step'] ?></span>
         </div>
