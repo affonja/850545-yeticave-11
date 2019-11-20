@@ -64,7 +64,7 @@ if (!$connection['link']) {
         $errors = array_filter($errors);
 
         if (count($errors)) {
-            $page_content = include_template('add-lot.php', [
+            $page_content = include_template('/add-lot.php', [
                 'categories' => $categories,
                 'errors'     => $errors,
                 'lot'        => $lot

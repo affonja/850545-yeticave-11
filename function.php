@@ -177,7 +177,7 @@ function getValidateForm(
     return $errors;
 }
 
-function getValidateFile(array &$post_arr):?string
+function getValidateFile(array &$post_arr): ?string
 {
     if ($_FILES['lot_img']['name']) {
         $path = $_FILES['lot_img']['tmp_name'];
@@ -204,7 +204,7 @@ function getValidateFile(array &$post_arr):?string
     return null;
 }
 
-function getAddLot(mysqli $connection, array $lot):bool
+function getAddLot(mysqli $connection, array $lot): bool
 {
     $sql = <<<SQL
 INSERT INTO lots (
@@ -225,7 +225,52 @@ SQL;
     return null;
 }
 
-function getPostVal(string $name):?string
+function getPostVal(string $name): ?string
 {
     return filter_input(INPUT_POST, $name);
+}
+
+function validateEmail($value, mysqli $connection): ?string
+{
+    if ($value) {
+        $sql = 'SELECT email FROM users WHERE email = ?';
+        $stmt = db_get_prepare_stmt($connection, $sql, [$value]);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_get_result($stmt);
+        if (mysqli_stmt_affected_rows($stmt) > 0) {
+            return 'Такой email уже зарегистрирован';
+        }
+    }
+    return null;
+}
+
+function validatePass($value): ?string
+{
+    if ($value) {
+        if (strlen($value) < 6) {
+            return 'Не менее 6 символов';
+        }
+    }
+    return null;
+}
+
+function getAddUser(mysqli $connection, array $user): bool
+{
+    $password = password_hash($user['password'], PASSWORD_DEFAULT);
+    $sql = <<<SQL
+INSERT INTO users ( creation_time, email, name, password, contacts) 
+VALUES ( NOW(),?,?,?,?)
+SQL;
+    $stmt = db_get_prepare_stmt($connection, $sql, [
+        $user['email'],
+        $password,
+        $user['name'],
+        $user['password']
+    ]);
+    $result = mysqli_stmt_execute($stmt);
+
+    if ($result) {
+        return true;
+    }
+    return null;
 }
