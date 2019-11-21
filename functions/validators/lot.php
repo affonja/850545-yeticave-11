@@ -1,0 +1,103 @@
+<?php
+
+function validate_lot_form(array &$lot_data, $file_data, array $cat_ids): array
+{
+    $errors = [];
+    $errors['lot-name'] = validate_lot_name($lot_data['lot-name']);
+    $errors['category'] = validate_lot_category($lot_data['category'],
+        $cat_ids);
+    $errors['message'] = validate_lot_message($lot_data['message'], 3, 3000);
+    $errors['lot-rate'] = validate_lot_rate($lot_data['lot-rate']);
+    $errors['lot-step'] = validate_lot_step($lot_data['lot-step']);
+    $errors['lot-date'] = validate_lot_date($lot_data['lot-date'], 'P1D');
+    $errors['file'] = validate_lot_file($file_data, $lot_data);
+    $errors = array_filter($errors);
+
+    return $errors;
+}
+
+function validate_lot_name(string $name): ?string
+{
+    if (!$name) {
+        return 'Имя лота не может быть пустым';
+    }
+    if (mb_strlen($name) < 3) {
+        return 'Название не менее 3 символов';
+    }
+    if (mb_strlen($name) >= 128) {
+        return 'Название не более 50 символов';
+    }
+    return null;
+}
+
+function validate_lot_category(string $category, array $category_list): ?string
+{
+    if (!in_array($category, $category_list)) {
+        return "Не выбрана категория";
+    }
+    return null;
+}
+
+function validate_lot_message(string $message, int $min, int $max): ?string
+{
+    if (!$message) {
+        return 'Заполните описание';
+    }
+    $len = mb_strlen($message);
+    if ($len < $min or $len > $max) {
+        return "Значение должно быть от $min до $max символов";
+    }
+    return null;
+}
+
+function validate_lot_rate(int $rate): ?string
+{
+    if (!$rate or $rate < 0) {
+        return 'Число должно быть больше 0';
+    }
+    return null;
+}
+
+function validate_lot_step(int $step): ?string
+{
+    if (!$step or $step < 0) {
+        return 'Шаг ставки должен быть больше 0';
+    }
+    return null;
+}
+
+function validate_lot_date(string $date, string $interval): ?string
+{
+    if (!$date) {
+        return 'Выберите дату';
+    }
+    $now = new DateTime();
+    $min_interval = new DateInterval($interval);
+    $min_date = date_format(date_add($now, $min_interval), 'Y-m-d');
+    if ($date <= $min_date) {
+        return 'Дата должна быть больше текущей хотя бы на 1 день';
+    }
+    return null;
+}
+
+function validate_lot_file(string $file, array &$lot_data): ?string
+{
+    if (!$file) {
+        return $error = 'Не загружен файл';
+    }
+    $path = $_FILES['lot_img']['tmp_name'];
+    $file_type = mime_content_type($path);
+    $allow_type = [
+        'image/png',
+        'image/jpeg'
+    ];
+    if (!in_array($file_type, $allow_type)) {
+        return $error = 'Неверный формат файла';
+    }
+    $file_name = $_FILES['lot_img']['name'];
+    $ext = substr($file_name, strrpos($file_name, '.'));
+    $lot_data['file'] = '/uploads/'.uniqid().$ext;
+    move_uploaded_file($_FILES['lot_img']['tmp_name'],
+        substr($lot_data['file'], 1));
+    return null;
+}

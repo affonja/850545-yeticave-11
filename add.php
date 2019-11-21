@@ -5,7 +5,7 @@ if (!$connection['link']) {
     $page_content = include_template('error.php',
         ['error' => $connection['error']]);
 } else {
-    $categories = getCategories($connection['link'], $error);
+    $categories = get_сategories($connection['link'], $error);
     if (is_array($categories)) {
         $cat_ids = array_column($categories, 'id');
         $page_content = include_template('main.php',
@@ -15,53 +15,19 @@ if (!$connection['link']) {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $required = [
-            'lot-name',
-            'category',
-            'message',
-            'lot-rate',
-            'lot-step',
-            'lot-date'
-        ];
-        $rules = [
-            'lot-name' => function ($value) {
-                return validateLength($value, 3, 200);
-            },
-            'category' => function ($value) use ($cat_ids) {
-                return validateCategory($value, $cat_ids);
-            },
-            'message'  => function ($value) {
-                return validateLength($value, 10, 3000);
-            },
-            'lot-rate' => function ($value) {
-                return validatePrice($value);
-            },
-            'lot-step' => function ($value) {
-                return validateBetStep($value);
-            },
-            'lot-date' => function ($value) {
-                if (is_date_valid($value) and
-                    is_interval_valid($value, 'P1D')
-                ) {
-                    return null;
-                } else {
-                    return 'Выберите корректную дату';
-                }
-            }
-        ];
-        $lotData = getLotFormData($_POST);
-        $errors = validateForm($lotData, $rules, $required);
+        $file_data = $_FILES['lot_img']['name'];
+        $lot_data = get_lot_form_data($_POST);
+        $errors = validate_lot_form($lot_data, $file_data, $cat_ids);
 
         if (count($errors)) {
             $page_content = include_template('add-lot.php', [
                 'categories' => $categories,
                 'errors'     => $errors,
-                'lot'        => $lotData
+                'lot'        => $lot_data
             ]);
         } else {
-            $add_lot = addLot($connection['link'], $lotData);
-            if ($add_lot) {
-                $lot_id = mysqli_insert_id($connection['link']);
+            $lot_id = add_lot($connection['link'], $lot_data);
+            if ($lot_id) {
                 header("Location: lot.php?id=".$lot_id);
             }
         }
@@ -69,7 +35,7 @@ if (!$connection['link']) {
         $page_content = include_template('add-lot.php', [
             'categories' => $categories,
             'errors'     => $errors,
-            'lot'        => $lotData
+            'lot'        => $lot_data
         ]);
     }
 }

@@ -6,7 +6,7 @@ if (!$connection['link']) {
         ['error' => $connection['error']]);
 } else {
 
-    $categories = getCategories($connection['link'], $error);
+    $categories = get_сategories($connection['link'], $error);
     if ($categories) {
         $page_content = include_template('main.php',
             ['categories' => $categories]);
@@ -15,7 +15,7 @@ if (!$connection['link']) {
     }
 
     $lot_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-    $lot = getLot($connection['link'], $lot_id);
+    $lot = get_lot($connection['link'], $lot_id);
     if (!$lot_id or !is_array($lot)) {
         http_response_code(404);
         $page_content = include_template('404.php', [
