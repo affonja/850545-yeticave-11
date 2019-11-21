@@ -2,7 +2,7 @@
 
 function get_сategories(mysqli $connection, string &$error): ?array
 {
-    $sql = 'SELECT id, name, code FROM categoriest';
+    $sql = 'SELECT id, name, code FROM categories';
     $result = mysqli_query($connection, $sql);
     $error = mysqli_error($connection);
 

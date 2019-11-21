@@ -6,12 +6,11 @@ if (!$connection['link']) {
         ['error' => $connection['error']]);
 } else {
     $categories = get_сategories($connection['link'], $error);
-    if (is_array($categories)) {
+    $categories = get_сategories($connection['link'], $error);
+    if (!is_array($categories)) {
+        $categories = $error;
+    } else{
         $cat_ids = array_column($categories, 'id');
-        $page_content = include_template('main.php',
-            ['categories' => $categories]);
-    } else {
-        $page_content = include_template('error.php', ['error' => $categories]);
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

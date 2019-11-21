@@ -36,7 +36,8 @@
                     <div class="lot-item__min-cost">
                         Мин. ставка <span>
                                     <?php
-                                    $minbet = ($current_price + $lot['bet_step']);
+                                    $minbet = ($current_price
+                                        + $lot['bet_step']);
                                     echo price_format($minbet).' р';
                                     ?></span>
                     </div>

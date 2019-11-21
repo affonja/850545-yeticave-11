@@ -22,7 +22,9 @@
                 <?php foreach ($categories as $category): ?>
                     <option
                         <?= 'value="'.$category['id'].'"'; ?>
-                        <?php if ($category['id'] == get_post_val('category')): ?>
+                        <?php if ($category['id']
+                            == get_post_val('category')
+                        ): ?>
                             selected
                         <?php endif; ?>
                     ><?= $category['name']; ?>
@@ -45,7 +47,8 @@
     <div class="form__item form__item--file  <?= $classname; ?>">
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file   <?= $classname; ?>">
-            <input class="visually-hidden" type="file" id="lot-img" name="lot_img">
+            <input class="visually-hidden" type="file" id="lot-img"
+                   name="lot_img">
             <label for="lot-img">
                 Добавить
             </label>

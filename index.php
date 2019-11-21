@@ -6,11 +6,8 @@ if (!$connection['link']) {
         ['error' => $connection['error']]);
 } else {
     $categories = get_сategories($connection['link'], $error);
-    if ($categories) {
-        $page_content = include_template('main.php',
-            ['categories' => $categories]);
-    } else {
-        $page_content = include_template('error.php', ['error' => $error]);
+    if (!is_array($categories)) {
+        $categories = $error;
     }
 
     $lots = get_active_lots($connection['link'], $error);

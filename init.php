@@ -12,7 +12,7 @@ require_once('data.php');
 
 $connection = db_connect($config['db']);
 
-$error='';
+$error = '';
 $categories = [];
 $page_content = '';
 

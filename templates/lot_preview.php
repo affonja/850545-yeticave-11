@@ -11,7 +11,8 @@
         <div class="lot__state">
             <div class="lot__rate">
                 <span class="lot__amount">Стартовая цена</span>
-                <span class="lot__cost"><?= price_format($lot['bet_start']/100)
+                <span class="lot__cost"><?= price_format($lot['bet_start']
+                        / 100)
                     .' <b class="rub">р</b>'; ?></span>
             </div>
             <?php $time_remaining = get_time_remaining($lot['end_time']); ?>
