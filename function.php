@@ -274,3 +274,31 @@ SQL;
     }
     return null;
 }
+
+function getFormData(array $form_data):array {
+    $form_data = filter_input_array(INPUT_POST, [
+            'lot-name' => FILTER_DEFAULT,
+            'category' => FILTER_DEFAULT,
+            'message'  => FILTER_DEFAULT,
+            'lot-rate' => FILTER_VALIDATE_FLOAT,
+            'lot-step' => FILTER_VALIDATE_INT,
+            'email' => FILTER_VALIDATE_EMAIL,
+            'lot-date' => FILTER_DEFAULT,
+            'password' => FILTER_DEFAULT
+    ], false);
+    return $form_data;
+}
+
+function validateEmail2($value, mysqli $connection): ?string
+{
+    if ($value) {
+        $sql = 'SELECT email FROM users WHERE email = ?';
+        $stmt = db_get_prepare_stmt($connection, $sql, [$value]);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_get_result($stmt);
+        if (mysqli_stmt_affected_rows($stmt) === 0) {
+            return 'Такой email не зарегистрирован';
+        }
+    }
+    return null;
+}

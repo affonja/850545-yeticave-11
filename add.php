@@ -59,6 +59,7 @@ if (!$connection['link']) {
             'lot-step' => FILTER_VALIDATE_INT,
             'lot-date' => FILTER_DEFAULT
         ], true);
+
         $errors = getValidateForm($lot, $rules, $errors, $required);
         $errors['file'] = getValidateFile($lot);
         $errors = array_filter($errors);
