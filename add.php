@@ -14,8 +14,7 @@ if (!$connection['link']) {
         $page_content = include_template('error.php', ['error' => $categories]);
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $errors = [];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $required = [
             'lot-name',
             'category',
@@ -50,26 +49,17 @@ if (!$connection['link']) {
                 }
             }
         ];
-
-        $lot = filter_input_array(INPUT_POST, [
-            'lot-name' => FILTER_DEFAULT,
-            'category' => FILTER_DEFAULT,
-            'message'  => FILTER_DEFAULT,
-            'lot-rate' => FILTER_VALIDATE_FLOAT,
-            'lot-step' => FILTER_VALIDATE_INT,
-            'lot-date' => FILTER_DEFAULT
-        ], true);
-        $errors = getValidateForm($lot, $rules, $errors, $required);
-        $errors = array_filter($errors);
+        $lotData = getLotFormData($_POST);
+        $errors = validateForm($lotData, $rules, $required);
 
         if (count($errors)) {
             $page_content = include_template('add-lot.php', [
                 'categories' => $categories,
                 'errors'     => $errors,
-                'lot'        => $lot
+                'lot'        => $lotData
             ]);
         } else {
-            $add_lot = getAddLot($connection['link'], $lot);
+            $add_lot = addLot($connection['link'], $lotData);
             if ($add_lot) {
                 $lot_id = mysqli_insert_id($connection['link']);
                 header("Location: lot.php?id=".$lot_id);
@@ -79,7 +69,7 @@ if (!$connection['link']) {
         $page_content = include_template('add-lot.php', [
             'categories' => $categories,
             'errors'     => $errors,
-            'lot'        => $lot
+            'lot'        => $lotData
         ]);
     }
 }

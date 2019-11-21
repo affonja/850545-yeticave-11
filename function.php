@@ -157,10 +157,9 @@ function is_interval_valid($value, string $interval): bool
     return false;
 }
 
-function getValidateForm(
+function validateForm(
     array &$lot,
     array $rules,
-    array $errors,
     array $required
 ): array {
     foreach ($lot as $field => $value) {
@@ -175,6 +174,7 @@ function getValidateForm(
     }
 
     $errors['file'] = getValidateFile($lot);
+    $errors = array_filter($errors);
 
     return $errors;
 }
@@ -206,7 +206,7 @@ function getValidateFile(array &$lot):?string
     return null;
 }
 
-function getAddLot(mysqli $connection, array $lot):bool
+function addLot(mysqli $connection, array $lot):bool
 {
     $sql = <<<SQL
 INSERT INTO lots (
@@ -230,4 +230,16 @@ SQL;
 function getPostVal(string $name):?string
 {
     return filter_input(INPUT_POST, $name);
+}
+
+function getLotFormData(array $form_data):array {
+    $form_data = filter_input_array(INPUT_POST, [
+        'lot-name' => FILTER_DEFAULT,
+        'category' => FILTER_DEFAULT,
+        'message'  => FILTER_DEFAULT,
+        'lot-rate' => FILTER_VALIDATE_FLOAT,
+        'lot-step' => FILTER_VALIDATE_INT,
+        'lot-date' => FILTER_DEFAULT
+    ], true);
+    return $form_data;
 }
