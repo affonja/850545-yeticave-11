@@ -99,12 +99,11 @@ SQL;
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    $lot = null;
     if ($result) {
         $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
 
-    return $lot;
+    return $lot ?? null;
 }
 
 function validateCategory($value, array $category_list): ?string
@@ -263,8 +262,8 @@ VALUES ( NOW(),?,?,?,?)
 SQL;
     $stmt = db_get_prepare_stmt($connection, $sql, [
         $user['email'],
-        $password,
         $user['name'],
+        $password,
         $user['password']
     ]);
     $result = mysqli_stmt_execute($stmt);
@@ -275,30 +274,55 @@ SQL;
     return null;
 }
 
-function getFormData(array $form_data):array {
+function getFormData(array $form_data): array
+{
     $form_data = filter_input_array(INPUT_POST, [
-            'lot-name' => FILTER_DEFAULT,
-            'category' => FILTER_DEFAULT,
-            'message'  => FILTER_DEFAULT,
-            'lot-rate' => FILTER_VALIDATE_FLOAT,
-            'lot-step' => FILTER_VALIDATE_INT,
-            'email' => FILTER_VALIDATE_EMAIL,
-            'lot-date' => FILTER_DEFAULT,
-            'password' => FILTER_DEFAULT
+        'lot-name' => FILTER_DEFAULT,
+        'category' => FILTER_DEFAULT,
+        'message'  => FILTER_DEFAULT,
+        'lot-rate' => FILTER_VALIDATE_FLOAT,
+        'lot-step' => FILTER_VALIDATE_INT,
+        'email'    => FILTER_VALIDATE_EMAIL,
+        'lot-date' => FILTER_DEFAULT,
+        'password' => FILTER_DEFAULT
     ], false);
     return $form_data;
 }
 
 function validateEmail2($value, mysqli $connection): ?string
 {
-    if ($value) {
-        $sql = 'SELECT email FROM users WHERE email = ?';
-        $stmt = db_get_prepare_stmt($connection, $sql, [$value]);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_get_result($stmt);
-        if (mysqli_stmt_affected_rows($stmt) === 0) {
-            return 'Такой email не зарегистрирован';
-        }
+    if (!$value) {
+        return 'Заполните поле';
+    }
+    $sql = 'SELECT email FROM users WHERE email = ?';
+    $stmt = db_get_prepare_stmt($connection, $sql, [$value]);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_get_result($stmt);
+    if (mysqli_stmt_affected_rows($stmt) === 0) {
+        return 'Такой email не зарегистрирован';
     }
     return null;
+}
+
+function validatePass2(string $pass, mysqli $connection, string $email): ?string
+{
+    if (!$pass) {
+        return 'Заполните поле';
+    }
+    $sql = "SELECT password FROM users WHERE email = ?";
+    $stmp = db_get_prepare_stmt($connection, $sql, [$email]);
+    mysqli_stmt_execute($stmp);
+    $result = mysqli_stmt_get_result($stmp);
+    $pass_bd = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    if (!password_verify($pass, $pass_bd['password'])) {
+        return 'Неверный пароль';
+    }
+    return null;
+}
+
+function getUser(mysqli $connection,string $email):array {
+    $sql = "SELECT * FROM users WHERE email = '$email'";
+    $result = mysqli_query($connection, $sql);
+    $user = mysqli_fetch_array($result,MYSQLI_ASSOC);
+        return $user;
 }

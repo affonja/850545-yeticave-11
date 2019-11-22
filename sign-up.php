@@ -2,7 +2,7 @@
 require_once('init.php');
 
 if (!$connection['link']) {
-    $page_content = include_template('error.php',
+    $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
     $categories = getCategories($connection['link'], $error);
@@ -10,7 +10,7 @@ if (!$connection['link']) {
         $page_content = include_template('main.php',
             ['categories' => $categories]);
     } else {
-        $page_content = include_template('error.php', ['error' => $categories]);
+        $page_content = include_template('404.php', ['error' => $categories]);
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -54,7 +54,7 @@ if (!$connection['link']) {
         } else {
             $add_user = getAddUser($connection['link'], $user);
             if ($add_user) {
-                header("Location: /pages/login.html");
+                header("Location: /pages/login.php");
             }
         }
 

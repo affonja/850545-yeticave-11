@@ -1,8 +1,11 @@
 <?php
 require_once('init.php');
 
+
+
+
 if (!$connection['link']) {
-    $page_content = include_template('error.php',
+    $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
     $categories = getCategories($connection['link'], $error);
@@ -11,7 +14,7 @@ if (!$connection['link']) {
         $page_content = include_template('main.php',
             ['categories' => $categories]);
     } else {
-        $page_content = include_template('error.php', ['error' => $categories]);
+        $page_content = include_template('404.php', ['error' => $categories]);
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -86,11 +89,18 @@ if (!$connection['link']) {
     }
 }
 
+if (!isset($_SESSION['user'])){
+    http_response_code(403);
+    $error = '403 ошибка';
+    $page_content = include_template('404.php', [
+        'categories' => $categories,
+        'error' => $error
+    ]);
+}
+
 
 print(include_template('layout.php', [
     'page_title'   => 'Добавить лот' ?? 'Ошибка',
-    'is_auth'      => $is_auth,
-    'user_name'    => $user_name,
     'page_content' => $page_content,
     'categories'   => $categories
 ]));

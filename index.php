@@ -2,7 +2,7 @@
 require_once('init.php');
 
 if (!$connection['link']) {
-    $page_content = include_template('error.php',
+    $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
     $categories = getCategories($connection['link'], $error);
@@ -10,7 +10,7 @@ if (!$connection['link']) {
         $page_content = include_template('main.php',
             ['categories' => $categories]);
     } else {
-        $page_content = include_template('error.php', ['error' => $error]);
+        $page_content = include_template('404.php', ['error' => $error]);
     }
 
     $lots = getActiveLots($connection['link'], $error);
@@ -20,14 +20,12 @@ if (!$connection['link']) {
             'lots'       => $lots
         ]);
     } else {
-        $page_content = include_template('error.php', ['error' => $error]);
+        $page_content = include_template('404.php', ['error' => $error]);
     }
 }
 
 print(include_template('layout.php', [
     'page_title'   => 'Главная',
-    'is_auth'      => $is_auth,
-    'user_name'    => $user_name,
     'page_content' => $page_content,
     'categories'   => $categories
 ]));

@@ -2,36 +2,24 @@
 require_once('init.php');
 
 if (!$connection['link']) {
-    $page_content = include_template('error.php',
+    $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
     $categories = getCategories($connection['link'], $error);
-    if (!is_array($categories)){
-        $categories= $error;
+    if (!is_array($categories)) {
+        $categories = $error;
     }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors = [];
-        $required = [
-            'lot-name',
-            'category',
-            'message',
-            'lot-rate',
-            'lot-step',
-            'lot-date'
-        ];
-        $rules = [
-            'email'    => function ($value) use ($connection) {
-                return validateEmail2($value, $connection['link']);
-            }
-        ];
-
         $user_data = getFormData($_POST);
-        $errors = getValidateForm($user_data, $rules,$errors,$required);
-
-
-
-
+        $errors['email'] = validateEmail2($user_data['email'],
+            $connection['link']);
+        if ($errors['email'] === null) {
+            $errors['password'] = validatePass2($user_data['password'],
+                $connection['link'], $user_data['email']);
+        }
+        $errors = array_filter($errors);
 
         if (count($errors)) {
             $page_content = include_template('/login.php', [
@@ -39,17 +27,23 @@ if (!$connection['link']) {
                 'errors'     => $errors
             ]);
         } else {
-//                header("Location: lot.php?id=".$lot_id);
+            $user = getUser($connection['link'],$user_data['email']);
+            $_SESSION['user'] = $user['name'];
+            header("Location: index.php");
+            exit();
         }
 
 
-
-
-    } else{
-        $page_content = include_template('login.php', [
+    } else {
+        $page_content = include_template('/login.php', [
             'categories' => $categories,
             'errors'     => $errors
         ]);
+//        if (isset($_SESSION['user'])) {
+//            header ("Location: /index.php");
+//            exit();
+//        }
+
     }
 
 }
