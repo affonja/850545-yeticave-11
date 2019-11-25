@@ -6,7 +6,6 @@ if (!$connection['link']) {
         ['error' => $connection['error']]);
 } else {
     $categories = get_сategories($connection['link'], $error);
-    $categories = get_сategories($connection['link'], $error);
     if (!is_array($categories)) {
         $categories = $error;
     } else {
@@ -34,8 +33,7 @@ if (!$connection['link']) {
     } else {
         $page_content = include_template('add-lot.php', [
             'categories' => $categories,
-            'errors'     => $errors,
-            'lot'        => $lot_data
+            'errors'     => $error
         ]);
     }
 }

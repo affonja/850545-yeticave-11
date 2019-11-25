@@ -82,7 +82,7 @@ function validate_lot_date(string $date, string $interval): ?string
 
 function validate_lot_file(array $file_data): ?string
 {
-    if (!$file_data) {
+    if ($file_data['size'] === 0) {
         return $error = 'Не загружен файл';
     }
     $path = $file_data['tmp_name'];
