@@ -52,6 +52,7 @@
             <label for="lot-img">
                 Добавить
             </label>
+            <span class="form__error"><?= $errors['file'] ?></span>
         </div>
     </div>
     <div class="form__container-three">
