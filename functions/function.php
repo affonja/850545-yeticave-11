@@ -24,3 +24,14 @@ function price_format(int $price): string
     }
     return $price;
 }
+
+function save_file(array $lot_img): string
+{
+    $file_name = $lot_img['name'];
+    $ext = substr($file_name, strrpos($file_name, '.'));
+    $link = '/uploads/'.uniqid().$ext;
+    move_uploaded_file($lot_img['tmp_name'],
+        substr($link, 1));
+
+    return $link;
+}

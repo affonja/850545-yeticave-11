@@ -9,12 +9,12 @@ if (!$connection['link']) {
     $categories = get_сategories($connection['link'], $error);
     if (!is_array($categories)) {
         $categories = $error;
-    } else{
+    } else {
         $cat_ids = array_column($categories, 'id');
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $file_data = $_FILES['lot_img']['name'];
+        $file_data = $_FILES['lot_img'];
         $lot_data = get_lot_form_data($_POST);
         $errors = validate_lot_form($lot_data, $file_data, $cat_ids);
 
@@ -25,6 +25,7 @@ if (!$connection['link']) {
                 'lot'        => $lot_data
             ]);
         } else {
+            $lot_data['file'] = save_file($_FILES['lot_img']);
             $lot_id = add_lot($connection['link'], $lot_data);
             if ($lot_id) {
                 header("Location: lot.php?id=".$lot_id);

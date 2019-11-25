@@ -1,6 +1,6 @@
 <?php
 
-function validate_lot_form(array &$lot_data, $file_data, array $cat_ids): array
+function validate_lot_form(array $lot_data, $file_data, array $cat_ids): array
 {
     $errors = [];
     $errors['lot-name'] = validate_lot_name($lot_data['lot-name']);
@@ -10,7 +10,7 @@ function validate_lot_form(array &$lot_data, $file_data, array $cat_ids): array
     $errors['lot-rate'] = validate_lot_rate($lot_data['lot-rate']);
     $errors['lot-step'] = validate_lot_step($lot_data['lot-step']);
     $errors['lot-date'] = validate_lot_date($lot_data['lot-date'], 'P1D');
-    $errors['file'] = validate_lot_file($file_data, $lot_data);
+    $errors['file'] = validate_lot_file($file_data);
     $errors = array_filter($errors);
 
     return $errors;
@@ -80,12 +80,12 @@ function validate_lot_date(string $date, string $interval): ?string
     return null;
 }
 
-function validate_lot_file(string $file, array &$lot_data): ?string
+function validate_lot_file(array $file_data): ?string
 {
-    if (!$file) {
+    if (!$file_data) {
         return $error = 'Не загружен файл';
     }
-    $path = $_FILES['lot_img']['tmp_name'];
+    $path = $file_data['tmp_name'];
     $file_type = mime_content_type($path);
     $allow_type = [
         'image/png',
@@ -94,10 +94,7 @@ function validate_lot_file(string $file, array &$lot_data): ?string
     if (!in_array($file_type, $allow_type)) {
         return $error = 'Неверный формат файла';
     }
-    $file_name = $_FILES['lot_img']['name'];
-    $ext = substr($file_name, strrpos($file_name, '.'));
-    $lot_data['file'] = '/uploads/'.uniqid().$ext;
-    move_uploaded_file($_FILES['lot_img']['tmp_name'],
-        substr($lot_data['file'], 1));
+
     return null;
 }
+
