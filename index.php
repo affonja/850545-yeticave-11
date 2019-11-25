@@ -5,15 +5,12 @@ if (!$connection['link']) {
     $page_content = include_template('error.php',
         ['error' => $connection['error']]);
 } else {
-    $categories = getCategories($connection['link'], $error);
-    if ($categories) {
-        $page_content = include_template('main.php',
-            ['categories' => $categories]);
-    } else {
-        $page_content = include_template('error.php', ['error' => $error]);
+    $categories = get_сategories($connection['link'], $error);
+    if (!is_array($categories)) {
+        $categories = $error;
     }
 
-    $lots = getActiveLots($connection['link'], $error);
+    $lots = get_active_lots($connection['link'], $error);
     if ($lots) {
         $page_content = include_template('main.php', [
             'categories' => $categories,
