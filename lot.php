@@ -6,7 +6,7 @@ if (!$connection['link']) {
         ['error' => $connection['error']]);
 } else {
 
-    $categories = get_сategories($connection['link'], $error);
+    $categories = get_categories($connection['link'], $error);
     if (!is_array($categories)) {
         $categories = $error;
     }

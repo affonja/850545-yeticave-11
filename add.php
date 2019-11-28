@@ -5,7 +5,7 @@ if (!$connection['link']) {
     $page_content = include_template('error.php',
         ['error' => $connection['error']]);
 } else {
-    $categories = get_сategories($connection['link'], $error);
+    $categories = get_categories($connection['link'], $error);
     if (!is_array($categories)) {
         $categories = $error;
     } else {
@@ -18,10 +18,10 @@ if (!$connection['link']) {
         $errors = validate_lot_form($lot_data, $file_data, $cat_ids);
 
         if (count($errors)) {
-            $page_content = include_template('add-lot.php', [
+            $page_content = include_template('/add-lot.php', [
                 'categories' => $categories,
-                'errors'     => $errors,
-                'lot'        => $lot_data
+                'errors'     => $errors
+                //                'lot'        => $lot_data
             ]);
         } else {
             $lot_data['file'] = save_file($_FILES['lot_img']);

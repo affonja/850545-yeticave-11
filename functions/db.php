@@ -34,3 +34,25 @@ SQL;
     }
     return null;
 }
+
+function add_user(mysqli $connection, array $user): bool
+{
+    $password = password_hash($user['password'], PASSWORD_DEFAULT);
+    $sql = <<<SQL
+INSERT INTO users ( creation_time, email, name, password, contacts) 
+VALUES ( NOW(),?,?,?,?)
+SQL;
+    $stmt = db_get_prepare_stmt($connection, $sql, [
+        $user['email'],
+        $user['name'],
+        $password,
+        $user['message']
+    ]);
+    $result = mysqli_stmt_execute($stmt);
+
+    if ($result) {
+        return true;
+    }
+
+    return null;
+}

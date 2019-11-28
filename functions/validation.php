@@ -98,3 +98,66 @@ function validate_lot_file(array $file_data): ?string
     return null;
 }
 
+function validate_reg_form(array $user_data, mysqli $connection): array
+{
+    $errors = [];
+    $errors['email'] = validate_email($user_data['email'],
+        $connection);
+    $errors['password'] = validate_pass($user_data['password']);
+    $errors['name'] = validate_user_name($user_data['name']);
+    $errors['message'] = validate_contacts($user_data['message'], 3, 3000);
+    $errors = array_filter($errors);
+
+    return $errors;
+}
+
+function validate_email($email, mysqli $connection): ?string
+{
+    if (!$email) {
+        return 'Заполните поле';
+    }
+    $email_is_double = get_email($email, $connection);
+    if ($email_is_double) {
+        return 'Такой email уже зарегистрирован';
+    }
+    return null;
+}
+
+function validate_pass(string $pass): ?string
+{
+    if (!$pass) {
+        return 'Заполните поле';
+    } elseif (mb_strlen($pass) < 6) {
+        return 'Слишком короткий пароль';
+    }
+
+    return null;
+}
+
+function validate_user_name(string $name): ?string
+{
+    if (!$name) {
+        return 'Имя пользователя не может быть пустым';
+    }
+    if (mb_strlen($name) < 3) {
+        return 'Имя не менее 3 символов';
+    }
+    if (mb_strlen($name) >= 60) {
+        return 'Имя не более 60 символов';
+    }
+
+    return null;
+}
+
+function validate_contacts(string $message, int $min, int $max): ?string
+{
+    if (!$message) {
+        return 'Заполните контакты';
+    }
+    $len = mb_strlen($message);
+    if ($len < $min or $len > $max) {
+        return "Значение должно быть от $min до $max символов";
+    }
+
+    return null;
+}
