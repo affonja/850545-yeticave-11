@@ -29,7 +29,7 @@
                                     <?php
                                     $current_price = $lot['maxbet'] ??
                                         $lot['bet_start'];
-                                    echo price_format($current_price / 100);
+                                    echo price_format($current_price);
                                     ?>
                                     </span>
                     </div>
@@ -37,13 +37,14 @@
                         Мин. ставка <span>
                                     <?php
                                     $minbet = ($current_price
-                                            + $lot['bet_step']) / 100;
+                                        + $lot['bet_step']);
                                     echo price_format($minbet).' р';
                                     ?></span>
                     </div>
                 </div>
 
-<?php isset($_SESSION['user']) ? $classname = '' : $classname = 'visually-hidden' ; ?>
+                <?php isset($_SESSION['user']) ? $classname = ''
+                    : $classname = 'visually-hidden'; ?>
                 <form class="lot-item__form <?= $classname; ?>"
                       action="https://echo.htmlacademy.ru" method="post"
                       autocomplete="off">
@@ -55,7 +56,6 @@
                     </p>
                     <button type="submit" class="button">Сделать ставку</button>
                 </form>
-
 
 
             </div>

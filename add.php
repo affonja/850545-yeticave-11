@@ -1,106 +1,53 @@
 <?php
 require_once('init.php');
 
-
-
-
 if (!$connection['link']) {
     $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
-    $categories = getCategories($connection['link'], $error);
-    if (is_array($categories)) {
-        $cat_ids = array_column($categories, 'id');
-        $page_content = include_template('main.php',
-            ['categories' => $categories]);
+    $categories = get_categories($connection['link'], $error);
+    if (!is_array($categories)) {
+        $categories = $error;
     } else {
-        $page_content = include_template('404.php', ['error' => $categories]);
+        $cat_ids = array_column($categories, 'id');
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $errors = [];
-        $required = [
-            'lot-name',
-            'category',
-            'message',
-            'lot-rate',
-            'lot-step',
-            'lot-date'
-        ];
-        $rules = [
-            'lot-name' => function ($value) {
-                return validateLength($value, 3, 200);
-            },
-            'category' => function ($value) use ($cat_ids) {
-                return validateCategory($value, $cat_ids);
-            },
-            'message'  => function ($value) {
-                return validateLength($value, 10, 3000);
-            },
-            'lot-rate' => function ($value) {
-                return validatePrice($value);
-            },
-            'lot-step' => function ($value) {
-                return validateBetStep($value);
-            },
-            'lot-date' => function ($value) {
-                if (is_date_valid($value) and
-                    is_interval_valid($value, 'P1D')
-                ) {
-                    return null;
-                } else {
-                    return 'Выберите корректную дату';
-                }
-            }
-        ];
-
-        $lot = filter_input_array(INPUT_POST, [
-            'lot-name' => FILTER_DEFAULT,
-            'category' => FILTER_DEFAULT,
-            'message'  => FILTER_DEFAULT,
-            'lot-rate' => FILTER_VALIDATE_FLOAT,
-            'lot-step' => FILTER_VALIDATE_INT,
-            'lot-date' => FILTER_DEFAULT
-        ], true);
-
-        $errors = getValidateForm($lot, $rules, $errors, $required);
-        $errors['file'] = getValidateFile($lot);
-        $errors = array_filter($errors);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $file_data = $_FILES['lot_img'];
+        $lot_data = get_lot_form_data($_POST);
+        $errors = validate_lot_form($lot_data, $file_data, $cat_ids);
 
         if (count($errors)) {
             $page_content = include_template('/add-lot.php', [
                 'categories' => $categories,
-                'errors'     => $errors,
-                'lot'        => $lot
+                'errors'     => $errors
             ]);
         } else {
-            $add_lot = getAddLot($connection['link'], $lot);
-            if ($add_lot) {
-                $lot_id = mysqli_insert_id($connection['link']);
+            $lot_data['file'] = save_file($_FILES['lot_img']);
+            $lot_id = add_lot($connection['link'], $lot_data);
+            if ($lot_id) {
                 header("Location: lot.php?id=".$lot_id);
             }
         }
     } else {
         $page_content = include_template('add-lot.php', [
             'categories' => $categories,
-            'errors'     => $errors,
-            'lot'        => $lot
+            'errors'     => $error
         ]);
     }
 }
 
-if (!isset($_SESSION['user'])){
+if (!isset($_SESSION['user'])) {
     http_response_code(403);
-    $error = '403 ошибка';
+    $error = "Error 403 <br> Доступ запрещен";
     $page_content = include_template('404.php', [
         'categories' => $categories,
-        'error' => $error
+        'error'      => $error
     ]);
 }
 
-
 print(include_template('layout.php', [
-    'page_title'   => 'Добавить лот' ?? 'Ошибка',
+    'page_title'   => 'Добавить лот',
     'page_content' => $page_content,
     'categories'   => $categories
 ]));

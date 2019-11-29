@@ -5,21 +5,14 @@ if (!$connection['link']) {
     $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
-    $categories = getCategories($connection['link'], $error);
+    $categories = get_categories($connection['link'], $error);
     if (!is_array($categories)) {
         $categories = $error;
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $errors = [];
-        $user_data = getFormData($_POST);
-        $errors['email'] = validateEmail2($user_data['email'],
-            $connection['link']);
-        if ($errors['email'] === null) {
-            $errors['password'] = validatePass2($user_data['password'],
-                $connection['link'], $user_data['email']);
-        }
-        $errors = array_filter($errors);
+        $user_data = get_user_form_login_data($_POST);
+        $errors = validate_login_form($connection['link'], $user_data);
 
         if (count($errors)) {
             $page_content = include_template('/login.php', [
@@ -27,30 +20,26 @@ if (!$connection['link']) {
                 'errors'     => $errors
             ]);
         } else {
-            $user = getUser($connection['link'],$user_data['email']);
-            $_SESSION['user'] = $user['name'];
-            header("Location: index.php");
-            exit();
+            $user = get_user($connection['link'], $user_data['email']);
+            if ($user) {
+                $_SESSION = [
+                    'user' => $user['name'],
+                    'id'   => $user['id']
+                ];
+                header("Location: index.php");
+                exit();
+            }
         }
-
-
     } else {
         $page_content = include_template('/login.php', [
             'categories' => $categories,
-            'errors'     => $errors
+            'errors'     => $error
         ]);
-//        if (isset($_SESSION['user'])) {
-//            header ("Location: /index.php");
-//            exit();
-//        }
-
     }
-
 }
 
 print(include_template('layout.php', [
-    'page_title'   => 'Вход на сайт' ?? 'Ошибка',
-    'user_name'    => '',
+    'page_title'   => 'Вход на сайт',
     'page_content' => $page_content,
     'categories'   => $categories
 ]));

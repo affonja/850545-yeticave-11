@@ -6,8 +6,7 @@
                 <li class="nav__item">
                     <a href="pages/all-lots.html"><?= $category['name']; ?></a>
                 </li>
-            <?php endforeach; else: ?>
-            <?=$categories; ?>
+            <?php endforeach; else: echo $categories; ?>
         <?php endif; ?>
     </ul>
 </nav>

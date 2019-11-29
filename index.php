@@ -5,15 +5,12 @@ if (!$connection['link']) {
     $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
-    $categories = getCategories($connection['link'], $error);
-    if ($categories) {
-        $page_content = include_template('main.php',
-            ['categories' => $categories]);
-    } else {
-        $page_content = include_template('404.php', ['error' => $error]);
+    $categories = get_categories($connection['link'], $error);
+    if (!is_array($categories)) {
+        $categories = $error;
     }
 
-    $lots = getActiveLots($connection['link'], $error);
+    $lots = get_active_lots($connection['link'], $error);
     if ($lots) {
         $page_content = include_template('main.php', [
             'categories' => $categories,
@@ -25,7 +22,7 @@ if (!$connection['link']) {
 }
 
 print(include_template('layout.php', [
-    'page_title'   => 'Главная',
+    'page_title'   => 'Yeticave',
     'page_content' => $page_content,
     'categories'   => $categories
 ]));
