@@ -83,6 +83,11 @@ function get_post_val(string $name): ?string
     return filter_input(INPUT_POST, $name);
 }
 
+function get_get_val(string $query): ?string
+{
+    return filter_input(INPUT_GET, $query);
+}
+
 function get_user_form_reg_data(array $user_data): array
 {
     $user_data = filter_var_array($user_data, [
@@ -135,4 +140,55 @@ function get_user(mysqli $connection, string $email): array
     $result = mysqli_query($connection, $sql);
     $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
     return $user;
+}
+
+function get_lots_count(mysqli $connection, string $query)
+{
+    if ($query) {
+        $sql = <<<SQL
+SELECT COUNT(*) as count_item
+FROM lots
+WHERE end_time > NOW()
+  AND MATCH(name, description) AGAINST(? IN BOOLEAN MODE)
+SQL;
+        $stmt = db_get_prepare_stmt($connection, $sql, [$query]);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $lots_found = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        if ($lots_found['count_item'] > 0) {
+            return $lots_found['count_item'];
+        }
+        return 'Ничего не найдено по вашему запросу';
+    }
+
+    return 'пустой запрос';
+}
+
+function get_searching_lots(
+    mysqli $connection,
+    string $query,
+    int $limit,
+    int $offset
+): array {
+    $sql = <<<SQL
+SELECT l.id,
+       l.name,
+       bet_start,
+       img,
+       end_time,
+       creation_time,
+       c.name AS category
+FROM lots l
+         INNER JOIN categories c on l.category_id = c.id
+WHERE end_time > NOW()
+  AND MATCH(l.name, description) AGAINST(? IN BOOLEAN MODE)
+ORDER BY creation_time DESC
+LIMIT $limit OFFSET $offset
+SQL;
+    $stmt = db_get_prepare_stmt($connection, $sql, [$query]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $lots;
 }
