@@ -8,20 +8,21 @@ CREATE TABLE categories(
 );
 
 CREATE TABLE lots(
-	id INT AUTO_INCREMENT PRIMARY KEY,
-	creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-	name VARCHARACTER(128) NOT NULL,
-	description TEXT,
-	img VARCHARACTER(255),
-	bet_start INT NOT NULL,
-	end_time TIMESTAMP NOT NULL,
-	bet_step INT NOT NULL,
-	KEY name_idx (name),
-	KEY creation_time_idx (creation_time),
-	KEY end_time_idx (end_time),
-	owner_id INT NOT NULL,
-	winner_id INT,
-	category_id INT NOT NULL
+                     id            INT AUTO_INCREMENT PRIMARY KEY,
+                     creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+                     name VARCHARACTER(128) NOT NULL,
+                     description   TEXT,
+                     img VARCHARACTER(255),
+                     bet_start     INT       NOT NULL,
+                     end_time      TIMESTAMP NOT NULL,
+                     bet_step      INT       NOT NULL,
+                     KEY name_idx (name),
+                     KEY creation_time_idx (creation_time),
+                     KEY end_time_idx (end_time),
+                     owner_id      INT       NOT NULL,
+                     winner_id     INT,
+                     category_id   INT       NOT NULL,
+                     FULLTEXT INDEX `lots_search` (`name`, `description`)
 );
 
 CREATE TABLE bets(

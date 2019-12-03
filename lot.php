@@ -2,10 +2,9 @@
 require_once('init.php');
 
 if (!$connection['link']) {
-    $page_content = include_template('error.php',
+    $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
-
     $categories = get_categories($connection['link'], $error);
     if (!is_array($categories)) {
         $categories = $error;
@@ -13,10 +12,12 @@ if (!$connection['link']) {
 
     $lot_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
     $lot = get_lot($connection['link'], $lot_id);
+
     if (!$lot_id or !is_array($lot)) {
         http_response_code(404);
+        $error = 'Лот не найден';
         $page_content = include_template('404.php', [
-            'error'      => $lot,
+            'error'      => $error,
             'categories' => $categories
         ]);
     } else {
@@ -26,10 +27,9 @@ if (!$connection['link']) {
         ]);
     }
 }
+
 print(include_template('layout.php', [
     'page_title'   => $lot['name'] ?? 'Ошибка',
-    'is_auth'      => $is_auth,
-    'user_name'    => $user_name,
     'page_content' => $page_content,
     'categories'   => $categories
 ]));

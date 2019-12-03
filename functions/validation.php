@@ -98,11 +98,10 @@ function validate_lot_file(array $file_data): ?string
     return null;
 }
 
-function validate_reg_form(array $user_data, mysqli $connection): array
+function validate_reg_form(mysqli $connection, array $user_data): array
 {
     $errors = [];
-    $errors['email'] = validate_email($user_data['email'],
-        $connection);
+    $errors['email'] = validate_email($connection, $user_data['email']);
     $errors['password'] = validate_pass($user_data['password']);
     $errors['name'] = validate_user_name($user_data['name']);
     $errors['message'] = validate_contacts($user_data['message'], 3, 3000);
@@ -111,12 +110,12 @@ function validate_reg_form(array $user_data, mysqli $connection): array
     return $errors;
 }
 
-function validate_email($email, mysqli $connection): ?string
+function validate_email(mysqli $connection, $email): ?string
 {
     if (!$email) {
         return 'Заполните поле';
     }
-    $email_is_double = get_email($email, $connection);
+    $email_is_double = get_email($connection, $email);
     if ($email_is_double) {
         return 'Такой email уже зарегистрирован';
     }
@@ -157,6 +156,47 @@ function validate_contacts(string $message, int $min, int $max): ?string
     $len = mb_strlen($message);
     if ($len < $min or $len > $max) {
         return "Значение должно быть от $min до $max символов";
+    }
+
+    return null;
+}
+
+function validate_login_form(mysqli $connection, array $user_data): array
+{
+    $errors = [];
+    $errors['email'] = validate_email_exist($connection, $user_data['email']);
+    $errors['password'] = validate_email_pass($connection, $user_data['email'],
+        $user_data['password']);
+    $errors = array_filter($errors);
+
+    return $errors;
+}
+
+function validate_email_exist(mysqli $connection, string $email): ?string
+{
+    if (!$email) {
+        return 'Заполните поле';
+    }
+    $email_exist = get_email($connection, $email);
+    if (!$email_exist) {
+        return 'Такой email не зарегистрирован';
+    }
+
+    return null;
+}
+
+function validate_email_pass(
+    mysqli $connection,
+    string $email,
+    string $pass
+): ?string {
+    if (!$pass) {
+        return 'Заполните поле';
+    }
+    $pass_from_bd = get_pass($connection, $email);
+
+    if (!password_verify($pass, $pass_from_bd['password'])) {
+        return 'Неверный пароль';
     }
 
     return null;

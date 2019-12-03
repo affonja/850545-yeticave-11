@@ -2,7 +2,7 @@
 require_once('init.php');
 
 if (!$connection['link']) {
-    $page_content = include_template('error.php',
+    $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
     $categories = get_categories($connection['link'], $error);
@@ -21,7 +21,6 @@ if (!$connection['link']) {
             $page_content = include_template('/add-lot.php', [
                 'categories' => $categories,
                 'errors'     => $errors
-                //                'lot'        => $lot_data
             ]);
         } else {
             $lot_data['file'] = save_file($_FILES['lot_img']);
@@ -38,11 +37,17 @@ if (!$connection['link']) {
     }
 }
 
+if (!isset($_SESSION['user'])) {
+    http_response_code(403);
+    $error = "Error 403 <br> Доступ запрещен";
+    $page_content = include_template('404.php', [
+        'categories' => $categories,
+        'error'      => $error
+    ]);
+}
 
 print(include_template('layout.php', [
-    'page_title'   => 'Добавить лот' ?? 'Ошибка',
-    'is_auth'      => $is_auth,
-    'user_name'    => $user_name,
+    'page_title'   => 'Добавить лот',
     'page_content' => $page_content,
     'categories'   => $categories
 ]));
