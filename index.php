@@ -1,25 +1,14 @@
 <?php
 require_once('init.php');
 
-if (!$connection['link']) {
-    $page_content = include_template('404.php',
-        ['error' => $connection['error']]);
-} else {
-    $categories = get_categories($connection['link'], $error);
-    if (!is_array($categories)) {
-        $categories = $error;
-    }
+$categories = get_categories($connection);
 
-    $lots = get_active_lots($connection['link'], $error);
-    if ($lots) {
-        $page_content = include_template('main.php', [
-            'categories' => $categories,
-            'lots'       => $lots
-        ]);
-    } else {
-        $page_content = include_template('404.php', ['error' => $error]);
-    }
-}
+$lots = get_active_lots($connection);
+
+$page_content = include_template('main.php', [
+    'categories' => $categories,
+    'lots'       => $lots
+]);
 
 print(include_template('layout.php', [
     'page_title'   => 'Yeticave',

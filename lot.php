@@ -5,7 +5,7 @@ if (!$connection['link']) {
     $page_content = include_template('404.php',
         ['error' => $connection['error']]);
 } else {
-    $categories = get_categories($connection['link'], $error);
+    $categories = get_categories($connection['link']);
     if (!is_array($categories)) {
         $categories = $error;
     }

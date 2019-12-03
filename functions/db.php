@@ -1,18 +1,13 @@
 <?php
-function db_connect(array $db): array
+function db_connect(array $db): mysqli
 {
-    $connection = [
-        'link'  => '',
-        'error' => ''
-    ];
-
-    $connection['link'] = mysqli_connect($db['host'], $db['user'],
+    $connection = mysqli_connect($db['host'], $db['user'],
         $db['password'], $db['database']);
-    if (!$connection['link']) {
-        $connection['error'] = mysqli_connect_error();
-    } else {
-        mysqli_set_charset($connection['link'], "utf8");
+    if (!$connection) {
+        exit(mysqli_connect_error());
     }
+
+    mysqli_set_charset($connection, "utf8");
     return $connection;
 }
 

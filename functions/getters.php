@@ -1,18 +1,17 @@
 <?php
 
-function get_categories(mysqli $connection, string &$error): ?array
+function get_categories(mysqli $connection): array
 {
     $sql = 'SELECT id, name, code FROM categories';
     $result = mysqli_query($connection, $sql);
-    $error = mysqli_error($connection);
 
-    if ($result) {
-        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if (!$result) {
+        exit(mysqli_error($connection));
     }
-    return null;
+    return mysqli_fetch_all($result, MYSQLI_ASSOC) ?? [];
 }
 
-function get_active_lots(mysqli $connection, string &$error): ?array
+function get_active_lots(mysqli $connection): array
 {
     $sql = <<<SQL
         SELECT
@@ -27,12 +26,11 @@ function get_active_lots(mysqli $connection, string &$error): ?array
     ORDER BY l.creation_time DESC LIMIT 6
 SQL;
     $result = mysqli_query($connection, $sql);
-    $error = mysqli_error($connection);
 
-    if ($result) {
-        return $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if (!$result) {
+        exit(mysqli_error($connection));
     }
-    return null;
+    return $result = mysqli_fetch_all($result, MYSQLI_ASSOC) ?? [];
 }
 
 function get_lot(mysqli $connection, int $id): ?array
