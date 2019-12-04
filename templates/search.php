@@ -1,12 +1,12 @@
 <?php
-
 /**
  * @var string $query
- * @var $cur_page
+ * @var int $cur_page
  * @var array $lots
  * @var array $pages
  */
 ?>
+
 <?= include_template('nav.php', ['categories' => $categories]) ?>
 <div class="container">
     <section class="lots">

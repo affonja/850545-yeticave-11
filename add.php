@@ -1,40 +1,31 @@
 <?php
 require_once('init.php');
 
-if (!$connection['link']) {
-    $page_content = include_template('404.php',
-        ['error' => $connection['error']]);
-} else {
-    $categories = get_categories($connection['link']);
-    if (!is_array($categories)) {
-        $categories = $error;
-    } else {
-        $cat_ids = array_column($categories, 'id');
-    }
+$categories = get_categories($connection);
+$cat_ids = array_column($categories, 'id');
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $file_data = $_FILES['lot_img'];
-        $lot_data = get_lot_form_data($_POST);
-        $errors = validate_lot_form($lot_data, $file_data, $cat_ids);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $file_data = $_FILES['lot_img'];
+    $lot_data = get_lot_form_data($_POST);
+    $errors = validate_lot_form($lot_data, $file_data, $cat_ids);
 
-        if (count($errors)) {
-            $page_content = include_template('/add-lot.php', [
-                'categories' => $categories,
-                'errors'     => $errors
-            ]);
-        } else {
-            $lot_data['file'] = save_file($_FILES['lot_img']);
-            $lot_id = add_lot($connection['link'], $lot_data);
-            if ($lot_id) {
-                header("Location: lot.php?id=".$lot_id);
-            }
-        }
-    } else {
-        $page_content = include_template('add-lot.php', [
+    if (count($errors)) {
+        $page_content = include_template('/add-lot.php', [
             'categories' => $categories,
-            'errors'     => $error
+            'errors'     => $errors
         ]);
+    } else {
+        $lot_data['file'] = save_file($_FILES['lot_img']);
+        $lot_id = add_lot($connection, $lot_data);
+        if ($lot_id) {
+            header("Location: lot.php?id=".$lot_id);
+        }
     }
+} else {
+    $page_content = include_template('add-lot.php', [
+        'categories' => $categories,
+        'errors'     => $error
+    ]);
 }
 
 if (!isset($_SESSION['user'])) {

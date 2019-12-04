@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $errors
+ */
+?>
+
 <?= include_template('nav.php', ['categories' => $categories]) ?>
 <?php $classname = !empty($errors) ? "form--invalid" : ""; ?>
 <form class="form container  <?= $classname; ?>" action="/login.php"

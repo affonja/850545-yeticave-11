@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var string $page_title
+ */
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -41,7 +47,7 @@
                 <?php if (isset($_SESSION['user'])) : ?>
                     <div class="user-menu__logged">
                         <p><?= $_SESSION['user']; ?></p>
-                        <a class="user-menu__bets" href="pages/my-bets.html">Мои
+                        <a class="user-menu__bets" href="/pages/my-bets.html">Мои
                             ставки</a>
                         <a class="user-menu__logout"
                            href="/logaut.php">Выход</a>
@@ -137,7 +143,7 @@
     </div>
 </footer>
 
-<script src="flatpickr.js"></script>
-<script src="script.js"></script>
+<script src="/flatpickr.js"></script>
+<script src="/script.js"></script>
 </body>
 </html>

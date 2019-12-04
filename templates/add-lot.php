@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $errors
+ */
+?>
+
+
 <?= include_template('nav.php', ['categories' => $categories]) ?>
 <?php $classname = !empty($errors) ? "form--invalid" : ""; ?>
 <form class="form form--add-lot container <?= $classname; ?>"
