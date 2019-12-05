@@ -27,6 +27,7 @@ function validate_lot_name(string $name): ?string
     if (mb_strlen($name) >= 128) {
         return 'Название не более 50 символов';
     }
+
     return null;
 }
 
@@ -35,6 +36,7 @@ function validate_lot_category(string $category, array $category_list): ?string
     if (!in_array($category, $category_list)) {
         return "Не выбрана категория";
     }
+
     return null;
 }
 
@@ -47,6 +49,7 @@ function validate_lot_message(string $message, int $min, int $max): ?string
     if ($len < $min or $len > $max) {
         return "Значение должно быть от $min до $max символов";
     }
+
     return null;
 }
 
@@ -55,6 +58,7 @@ function validate_lot_rate(int $rate): ?string
     if (!$rate or $rate < 0) {
         return 'Число должно быть больше 0';
     }
+
     return null;
 }
 
@@ -63,6 +67,7 @@ function validate_lot_step(int $step): ?string
     if (!$step or $step < 0) {
         return 'Шаг ставки должен быть больше 0';
     }
+
     return null;
 }
 
@@ -77,6 +82,7 @@ function validate_lot_date(string $date, string $interval): ?string
     if ($date <= $min_date) {
         return 'Дата должна быть больше текущей хотя бы на 1 день';
     }
+
     return null;
 }
 
@@ -119,6 +125,7 @@ function validate_email(mysqli $connection, $email): ?string
     if ($email_is_double) {
         return 'Такой email уже зарегистрирован';
     }
+
     return null;
 }
 

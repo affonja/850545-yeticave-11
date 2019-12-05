@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $lot
+ */
+?>
+
 <li class="lots__item lot">
     <div class="lot__image">
         <img src="<?= $lot['img']; ?>" width="350" height="260"

@@ -1,4 +1,5 @@
 <?php
+
 function get_time_remaining(string $time): array
 {
     $time_now = time();
@@ -22,6 +23,7 @@ function price_format(int $price): string
     if ($price >= 1000) {
         $price = number_format($price, 0, '.', ' ');
     }
+
     return $price;
 }
 

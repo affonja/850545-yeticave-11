@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var int $cur_page
+ * @var string $query
+ * @var array $pages
+ */
+?>
+
 <ul class="pagination-list">
     <li class="pagination-item pagination-item-prev">
         <?php ($cur_page == 1) ? $class_hide = 'visually-hidden'

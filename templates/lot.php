@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $lot
+ */
+?>
+
 <?= include_template('nav.php', ['categories' => $categories]) ?>
 <section class="lot-item container">
     <h2><?= $lot['name']; ?></h2>

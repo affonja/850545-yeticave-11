@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var string $query
+ * @var int $cur_page
+ * @var array $lots
+ * @var array $pages
+ */
+?>
+
 <?= include_template('nav.php', ['categories' => $categories]) ?>
 <div class="container">
     <section class="lots">
@@ -15,7 +24,6 @@
     </section>
     <?php if (count($pages) > 1) {
         echo include_template('paginator.php', [
-            'pages'    => $pages,
             'pages'    => $pages,
             'cur_page' => $cur_page,
             'query'    => $query
