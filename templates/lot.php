@@ -38,7 +38,9 @@
                         </span>
                     </div>
                     <div class="lot-item__min-cost">
-                        Мин. ставка <span> <?= price_format($lot['min_next_bet']).' р'; ?></span>
+                        Мин. ставка
+                        <span> <?= price_format($lot['min_next_bet'])
+                            .' р'; ?></span>
                     </div>
                 </div>
                 <?php isset($_SESSION['user']) ? $classname = ''
@@ -59,22 +61,18 @@
 
 
             </div>
-            <!--            <div class="history">-->
-            <!--                <h3>История ставок (<span>-->
-            <? //= count($bets); ?><!--</span>)</h3>-->
-            <!--                <table class="history__list">-->
-            <!--                    --><?php //foreach ($bets as $bet): ?>
-            <!--                        <tr class="history__item">-->
-            <!--                            <td class="history__name">-->
-            <? //= $bet['name']; ?><!--</td>-->
-            <!--                            <td class="history__price">-->
-            <? //= price_format($bet['sum']); ?><!--</td>-->
-            <!--                            <td class="history__time">-->
-            <? //= $bet['time_back'] ?><!--</td>-->
-            <!--                        </tr>-->
-            <!--                    --><? // endforeach; ?>
-            <!--                </table>-->
-            <!--            </div>-->
+            <div class="history">
+                <h3>История ставок (<span><?= count($bets); ?></span>)</h3>
+                <table class="history__list">
+                    <?php foreach ($bets as $bet): ?>
+                        <tr class="history__item">
+                            <td class="history__name"><?= $bet['name']; ?></td>
+                            <td class="history__price"><?= price_format($bet['sum']); ?></td>
+                            <td class="history__time"><?= $bet['time_back'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
         </div>
     </div>
 </section>

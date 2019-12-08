@@ -115,7 +115,8 @@ SQL;
     }
     $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
     if (!empty($lot)) {
-        $lot['min_next_bet'] = ($lot['max_bet'] ?? $lot['bet_start'])+ $lot['bet_step'];
+        $lot['min_next_bet'] = ($lot['max_bet'] ?? $lot['bet_start'])
+            + $lot['bet_step'];
     }
 
     return $lot ?? [];
@@ -240,4 +241,45 @@ SQL;
     $result = mysqli_stmt_execute($stmt);
 
     return $result;
+}
+
+function get_bets_for_lot(mysqli $connection, int $lot_id): array
+{
+    $sql = <<<SQL
+SELECT name, sum, b.creation_time FROM bets b 
+INNER JOIN users u ON b.user_id=u.id
+WHERE lot_id=?
+ORDER BY creation_time DESC 
+SQL;
+
+    $stmp = db_get_prepare_stmt($connection, $sql, [$lot_id]);
+    mysqli_stmt_execute($stmp);
+    $result = mysqli_stmt_get_result($stmp);
+    if (!$result) {
+        exit(mysqli_error($connection));
+    }
+
+    $bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    foreach ($bets as &$bet) {
+        $now = time();
+        $bet_time = strtotime($bet['creation_time']);
+        $diff_time = $now - $bet_time;
+        if ($diff_time < 59) {
+            $bet['time_back'] = $diff_time.' '.get_noun_plural_form($diff_time
+                    * 1, 'секунда', 'секунды', 'секунд').' назад';
+        } elseif ($diff_time < 3600) {
+            $diff_time = floor($diff_time / 60);
+            $bet['time_back'] = $diff_time.' '.get_noun_plural_form($diff_time
+                    * 1, 'минута', 'минуты', 'минут').' назад';
+        } elseif ($diff_time < 86400) {
+            $diff_time = floor($diff_time / 3600);
+            $bet['time_back'] = $diff_time.' '.get_noun_plural_form($diff_time
+                    * 1, 'час', 'часа', 'часов').' назад';
+        } elseif ($diff_time > 86400) {
+            $bet['time_back'] = date('d.m.y в H:i', $bet_time);
+        }
+    }
+
+    return $bets ?? [];
 }
