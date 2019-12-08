@@ -97,7 +97,7 @@ function get_lot(mysqli $connection, int $id): array
             l.bet_start, l.bet_step,
             l.creation_time, l.end_time,
             c.name AS category,
-            MAX(b.sum) as maxbet
+            MAX(b.sum) as max_bet
             FROM lots l
             INNER JOIN categories c ON category_id = c.id
             LEFT JOIN bets b ON b.lot_id = l.id
@@ -113,8 +113,12 @@ SQL;
     if (!$result) {
         exit(mysqli_errno($connection));
     }
+    $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    if (!empty($lot)) {
+        $lot['min_next_bet'] = ($lot['max_bet'] ?? $lot['bet_start'])+ $lot['bet_step'];
+    }
 
-    return mysqli_fetch_array($result, MYSQLI_ASSOC);
+    return $lot ?? [];
 }
 
 function get_email(mysqli $connection, $email): bool
@@ -167,7 +171,7 @@ WHERE end_time > NOW()
   AND MATCH(name, description) AGAINST(? IN BOOLEAN MODE)
 SQL;
         $stmt = db_get_prepare_stmt($connection, $sql, [$query]);
-        if (!mysqli_stmt_execute($stmt)){
+        if (!mysqli_stmt_execute($stmt)) {
             exit(mysqli_error($connection));
         }
 
@@ -205,11 +209,35 @@ ORDER BY creation_time DESC
 LIMIT $limit OFFSET $offset
 SQL;
     $stmt = db_get_prepare_stmt($connection, $sql, [$query]);
-    if (!mysqli_stmt_execute($stmt)){
+    if (!mysqli_stmt_execute($stmt)) {
         exit(mysqli_error($connection));
     }
 
     $result = mysqli_stmt_get_result($stmt);
     $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
     return $lots;
+}
+
+function get_add_bet(
+    mysqli $connection,
+    int $bet,
+    int $lot_id,
+    int $user_id
+): bool {
+    $sql = <<<SQL
+	INSERT INTO bets
+	SET 
+	    creation_time = NOW(),
+		sum = ?,
+		user_id = ?,
+		lot_id = ?
+SQL;
+    $stmt = db_get_prepare_stmt($connection, $sql, [
+        $bet,
+        $user_id,
+        $lot_id
+    ]);
+    $result = mysqli_stmt_execute($stmt);
+
+    return $result;
 }
