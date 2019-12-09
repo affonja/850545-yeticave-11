@@ -4,6 +4,9 @@ require_once('init.php');
 $categories = get_categories($connection);
 
 $lots = get_active_lots($connection);
+foreach ($lots as &$lot) {
+    $lot['bet_count'] = get_count_bets_for_lot($connection, $lot['id']);
+}
 
 $page_content = include_template('main.php', [
     'categories' => $categories,

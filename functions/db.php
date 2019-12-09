@@ -72,7 +72,8 @@ function get_active_lots(mysqli $connection): array
         SELECT
         l.id, l.name, l.bet_start, 
         l.img, l.end_time, 
-        c.name AS category
+        c.name AS category,
+        MAX(b.sum) as max_bet
         FROM lots l
         INNER JOIN categories c ON l.category_id = c.id
         LEFT JOIN bets b ON l.id = b.lot_id
@@ -295,4 +296,19 @@ function get_bets(mysqli $connection, string $sql, int $id): array
     }
 
     return $bets;
+}
+
+function get_count_bets_for_lot(mysqli $connection, int $lot_id): int
+{
+    $sql = "SELECT COUNT(*) FROM bets WHERE lot_id = ?";
+    $stmt = db_get_prepare_stmt($connection, $sql, [$lot_id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        exit(mysqli_error($connection));
+    }
+
+    $count = mysqli_fetch_array($result, MYSQLI_NUM);
+
+    return $count[0] ?? 0;
 }

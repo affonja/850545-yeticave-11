@@ -30,7 +30,8 @@ CREATE TABLE bets(
 	creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
 	sum INT NOT NULL,
 	user_id INT NOT NULL,
-	lot_id INT NOT NULL
+	lot_id INT NOT NULL,
+    win TINYINT(1) NOT NULL DEFAULT 0
 );
 
 CREATE TABLE users(

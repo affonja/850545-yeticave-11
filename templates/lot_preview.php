@@ -16,15 +16,28 @@
         </h3>
         <div class="lot__state">
             <div class="lot__rate">
-                <span class="lot__amount">Стартовая цена</span> <!-- 12 ставок -->
+                <span class="lot__amount">
+                    <?php
+                    if ($lot['bet_count'] > 0) {
+                        echo $lot['bet_count'].
+                            get_noun_plural_form($lot['bet_count'], ' ставка',
+                                ' ставки', ' ставок');
+                    } else {
+                        echo 'Стартовая цена';
+                    }
+                    ?>
+                    </span>
                 <span class="lot__cost">
-                    <?= price_format($lot['bet_start']) // макс ставка
-                    .' <b class="rub">р</b>'; ?></span>
+                    <?php $current_price = $lot['max_bet'] ??
+                        $lot['bet_start'];
+                    echo price_format($current_price)
+                        .' <b class="rub">р</b>'; ?>
+                </span>
             </div>
             <?php $timer = get_timer_state($lot); ?>
             <div class="lot__timer timer
             <?= $timer['state']; ?>">
-                  <?= $timer['message']; ?>
+                <?= $timer['message']; ?>
             </div>
         </div>
     </div>
