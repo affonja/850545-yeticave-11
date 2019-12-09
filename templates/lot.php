@@ -19,15 +19,10 @@
             <p class="lot-item__description"><?= $lot['description']; ?></p>
         </div>
         <div class="lot-item__right">
+            <?php $timer = get_timer_state($lot); ?>
             <div class="lot-item__state">
-                <?php $time_remaining = get_time_remaining($lot['end_time']); ?>
-                <div class="lot-item__timer timer <?php if ($time_remaining[0]
-                    < 1
-                ) {
-                    echo 'timer--finishing';
-                } ?>"><?= sprintf("%02d", $time_remaining[0]).':'
-                    .sprintf("%02d",
-                        $time_remaining[1]); ?>                </div>
+                <div class="lot-item__timer timer <?= $timer['state']; ?>">
+                    <?= $timer['message']; ?>                </div>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount">Текущая цена</span>
@@ -43,8 +38,13 @@
                             .' р'; ?></span>
                     </div>
                 </div>
-                <?php isset($_SESSION['user']) ? $classname = ''
-                    : $classname = 'visually-hidden'; ?>
+                <?php
+                if (
+                    !isset($_SESSION['user']) or
+                    $timer['class'] !== ''
+                ) {
+                    $classname = 'visually-hidden';
+                } ?>
                 <form class="lot-item__form <?= $classname; ?>"
                       action="/lot.php?id=<?= $lot['id']; ?>" method="post"
                       autocomplete="off">
@@ -58,8 +58,6 @@
                     </p>
                     <button type="submit" class="button">Сделать ставку</button>
                 </form>
-
-
             </div>
             <div class="history">
                 <h3>История ставок (<span><?= count($bets); ?></span>)</h3>

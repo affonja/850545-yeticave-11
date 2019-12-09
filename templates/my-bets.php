@@ -3,9 +3,9 @@
     <h2>Мои ставки</h2>
     <table class="rates__list">
         <?php foreach ($bets as $bet): ?>
-            <?php $bet_state = get_bet_state($bet, $user_id); ?>
+            <?php $timer = get_timer_state($bet, $user_id); ?>
             <tr class="rates__item
-            <?= $bet_state['class']; ?>">
+            <?= $timer['class']; ?>">
                 <td class=" rates__info">
                     <div class="rates__img">
                         <img src="<?= $bet['img']; ?>" width="54" height="40"
@@ -19,8 +19,8 @@
                     <?= $bet['category']; ?>
                 </td>
                 <td class="rates__timer">
-                    <div class="timer <?= $bet_state['state']; ?>">
-                        <?= $bet_state['message']; ?>
+                    <div class="timer <?= $timer['state']; ?>">
+                        <?= $timer['message']; ?>
                     </div>
                 </td>
                 <td class="rates__price">

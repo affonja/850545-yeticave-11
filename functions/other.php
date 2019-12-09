@@ -10,9 +10,10 @@ function get_time_remaining(string $time): array
     }
 
     $time_remaining = [
-        floor($time_diff / 3600),
-        floor(($time_diff % 3600) / 60),
-        $time_diff
+        'h'    => floor(($time_diff % 86400) / 3600),
+        'm'    => floor(($time_diff % 3600) / 60),
+        'd'    => floor($time_diff / 86400),
+        'diff' => $time_diff
     ];
 
     return $time_remaining;
@@ -39,30 +40,34 @@ function save_file(array $lot_img): string
     return $link;
 }
 
-function get_bet_state(array $bet, int $user_id): array
+function get_timer_state(array $lot, int $user_id = 0): array
 {
-    $time_remaining = get_time_remaining($bet['end_time']);
-    $bet_state = [
+    $time_remaining = get_time_remaining($lot['end_time']);
+    $timer = [
         'state'   => '',
-        'message' => sprintf("%02d", $time_remaining[0]).':'
-            .sprintf("%02d", $time_remaining[1]),
+        'message' =>
+            sprintf("%02d", $time_remaining['d']).':'
+            .sprintf("%02d", $time_remaining['h']).':'
+            .sprintf("%02d", $time_remaining['m']),
         'class'   => ''
     ];
 
-    if ($time_remaining[2] === 0) {
-        $bet_state['state'] = 'timer--end';
-        $bet_state['message'] = 'Торги окончены';
-        $bet_state['class'] = 'rates__item--end';
-        if ($bet['winner_id'] === $user_id AND $bet['win'] === 1) {
-            $bet_state['state'] = 'timer--win';
-            $bet_state['message'] = 'Ставка выиграла';
-            $bet_state['class'] = 'rates__item--win';
+    if ($time_remaining['diff'] === 0) {
+        $timer['state'] = 'timer--end';
+        $timer['message'] = 'Торги окончены';
+        $timer['class'] = 'rates__item--end';
+        if (isset($lot['win'])) {
+            if ($lot['winner_id'] === $user_id AND $lot['win'] === 1) {
+                $timer['state'] = 'timer--win';
+                $timer['message'] = 'Ставка выиграла';
+                $timer['class'] = 'rates__item--win';
+            }
         }
-    } elseif ($time_remaining[0] < 1) {
-        $bet_state['state'] = 'timer--finishing';
+    } elseif ($time_remaining['h'] < 1) {
+        $timer['state'] = 'timer--finishing';
     };
 
-    return $bet_state;
+    return $timer;
 }
 
 function get_bet_timeback(string $bets_creation_time): string
@@ -82,6 +87,9 @@ function get_bet_timeback(string $bets_creation_time): string
         $diff_time = floor($diff_time / 3600);
         $time_back = $diff_time.' '.get_noun_plural_form($diff_time,
                 'час', 'часа', 'часов').' назад';
+    } elseif ($diff_time < 172800) {
+        $diff_time = floor($diff_time / 86400);
+        $time_back = date('Вчера в H:i', $bet_time);
     } elseif ($diff_time > 86400) {
         $time_back = date('d.m.y в H:i', $bet_time);
     }
