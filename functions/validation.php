@@ -172,8 +172,10 @@ function validate_login_form(mysqli $connection, array $user_data): array
 {
     $errors = [];
     $errors['email'] = validate_email_exist($connection, $user_data['email']);
-    $errors['password'] = validate_email_pass($connection, $user_data['email'],
-        $user_data['password']);
+    if (empty($errors['email'])){
+        $errors['password'] = validate_email_pass($connection, $user_data['email'],
+            $user_data['password']);
+    }
     $errors = array_filter($errors);
 
     return $errors;

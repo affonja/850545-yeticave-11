@@ -251,8 +251,38 @@ INNER JOIN users u ON b.user_id=u.id
 WHERE lot_id=?
 ORDER BY creation_time DESC 
 SQL;
+    $bets = get_bets($connection, $sql, $lot_id);
 
-    $stmp = db_get_prepare_stmt($connection, $sql, [$lot_id]);
+    return $bets ?? [];
+}
+
+function get_bets_for_user(mysqli $connection, int $user_id): array
+{
+
+    $sql = <<<SQL
+SELECT l.img,
+       l.name,
+       l.winner_id,
+       c.name AS category,
+       l.end_time,
+       b.lot_id,
+       b.sum,
+       b.creation_time,
+       b.win
+FROM bets b
+         INNER JOIN lots l ON b.lot_id = l.id
+         INNER JOIN categories c ON l.category_id = c.id
+WHERE b.user_id = ?
+ORDER BY b.creation_time DESC
+SQL;
+    $bets = get_bets($connection, $sql, $user_id);
+
+    return $bets ?? [];
+}
+
+function get_bets(mysqli $connection, string $sql, int $id): array
+{
+    $stmp = db_get_prepare_stmt($connection, $sql, [$id]);
     mysqli_stmt_execute($stmp);
     $result = mysqli_stmt_get_result($stmp);
     if (!$result) {
@@ -260,26 +290,9 @@ SQL;
     }
 
     $bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
     foreach ($bets as &$bet) {
-        $now = time();
-        $bet_time = strtotime($bet['creation_time']);
-        $diff_time = $now - $bet_time;
-        if ($diff_time < 59) {
-            $bet['time_back'] = $diff_time.' '.get_noun_plural_form($diff_time
-                    * 1, 'секунда', 'секунды', 'секунд').' назад';
-        } elseif ($diff_time < 3600) {
-            $diff_time = floor($diff_time / 60);
-            $bet['time_back'] = $diff_time.' '.get_noun_plural_form($diff_time
-                    * 1, 'минута', 'минуты', 'минут').' назад';
-        } elseif ($diff_time < 86400) {
-            $diff_time = floor($diff_time / 3600);
-            $bet['time_back'] = $diff_time.' '.get_noun_plural_form($diff_time
-                    * 1, 'час', 'часа', 'часов').' назад';
-        } elseif ($diff_time > 86400) {
-            $bet['time_back'] = date('d.m.y в H:i', $bet_time);
-        }
+        $bet['time_back'] = get_bet_timeback($bet['creation_time']);
     }
 
-    return $bets ?? [];
+    return $bets;
 }
