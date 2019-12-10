@@ -63,7 +63,7 @@ function get_timer_state(array $lot, int $user_id = 0): array
                 $timer['class'] = 'rates__item--win';
             }
         }
-    } elseif ($time_remaining['h'] < 1) {
+    } elseif ($time_remaining['diff'] < 3600) {
         $timer['state'] = 'timer--finishing';
     };
 
