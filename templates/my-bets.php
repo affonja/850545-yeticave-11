@@ -3,7 +3,7 @@
     <h2>Мои ставки</h2>
     <table class="rates__list">
         <?php foreach ($bets as $bet): ?>
-            <?php $timer = get_timer_state($bet, $user_id); ?>
+            <?php $timer = get_timer_state($bet, $user_id, $win_bets); ?>
             <tr class="rates__item
             <?= $timer['class']; ?>">
                 <td class=" rates__info">
@@ -24,7 +24,8 @@
                     </div>
                 </td>
                 <td class="rates__price">
-                    <?= $bet['sum']; ?>
+                    <?= price_format($bet['sum'])
+                    .' р'; ?>
                 </td>
                 <td class="rates__time">
                     <?= $bet['time_back']; ?>

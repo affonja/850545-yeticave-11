@@ -40,7 +40,7 @@ function save_file(array $lot_img): string
     return $link;
 }
 
-function get_timer_state(array $lot, int $user_id = 0): array
+function get_timer_state(array $lot, int $user_id = 0, $win_bets = []): array
 {
     $time_remaining = get_time_remaining($lot['end_time']);
     $timer = [
@@ -56,23 +56,20 @@ function get_timer_state(array $lot, int $user_id = 0): array
         $timer['state'] = 'timer--end';
         $timer['message'] = 'Торги окончены';
         $timer['class'] = 'rates__item--end';
-        if (isset($lot['win'])) {
-            if ($lot['winner_id'] === $user_id AND $lot['win'] === 1) {
-                $timer['state'] = 'timer--win';
-                $timer['message'] = 'Ставка выиграла';
-                $timer['class'] = 'rates__item--win';
-            }
+        if (in_array($lot['bet_id'], $win_bets)) {
+            $timer['state'] = 'timer--win';
+            $timer['message'] = 'Ставка выиграла';
+            $timer['class'] = 'rates__item--win';
         }
     } elseif ($time_remaining['diff'] < 3600) {
         $timer['state'] = 'timer--finishing';
-    };
+    }
 
     return $timer;
 }
 
 function get_bet_timeback(string $bets_creation_time): string
 {
-
     $now = time();
     $bet_time = strtotime($bets_creation_time);
     $diff_time = $now - $bet_time;

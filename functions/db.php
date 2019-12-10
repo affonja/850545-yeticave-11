@@ -263,13 +263,12 @@ function get_bets_for_user(mysqli $connection, int $user_id): array
     $sql = <<<SQL
 SELECT l.img,
        l.name,
-       l.winner_id,
+       b.id as bet_id,
        c.name AS category,
        l.end_time,
        b.lot_id,
        b.sum,
-       b.creation_time,
-       b.win
+       b.creation_time
 FROM bets b
          INNER JOIN lots l ON b.lot_id = l.id
          INNER JOIN categories c ON l.category_id = c.id
@@ -311,4 +310,39 @@ function get_count_bets_for_lot(mysqli $connection, int $lot_id): int
     $count = mysqli_fetch_array($result, MYSQLI_NUM);
 
     return $count[0] ?? 0;
+}
+
+function get_lots_where_winner(mysqli $connection, int $user_id): array
+{
+    $sql = "SELECT id FROM lots WHERE winner_id = ?";
+    $stmt = db_get_prepare_stmt($connection, $sql, [$user_id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        exit(mysqli_error($connection));
+    }
+
+    $lots_win = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return array_column($lots_win, 'id') ?? [];
+}
+
+function get_win_bets_for_user(mysqli $connection, array $lots_ids): array
+{
+    $sql = <<<SQL
+SELECT id FROM bets
+WHERE bets.lot_id=?
+ORDER BY sum DESC LIMIT 1
+SQL;
+    $bets_win = [];
+    foreach ($lots_ids as $id) {
+        $stmt = db_get_prepare_stmt($connection, $sql, [$id]);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        if (!$result) {
+            exit(mysqli_error($connection));
+        }
+        $bets_win[] = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    }
+
+    return array_column($bets_win, 'id');
 }
