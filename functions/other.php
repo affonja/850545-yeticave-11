@@ -56,7 +56,7 @@ function get_timer_state(array $lot, int $user_id = 0, $win_bets = []): array
         $timer['state'] = 'timer--end';
         $timer['message'] = 'Торги окончены';
         $timer['class'] = 'rates__item--end';
-        if (in_array($lot['bet_id'], $win_bets)) {
+        if (isset($lot['bet_id']) and in_array($lot['bet_id'], $win_bets)) {
             $timer['state'] = 'timer--win';
             $timer['message'] = 'Ставка выиграла';
             $timer['class'] = 'rates__item--win';

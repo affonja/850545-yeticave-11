@@ -1,15 +1,19 @@
 <?php
 require_once('init.php');
+require_once('vendor/autoload.php');
 
 $lots = get_lots_without_win($connection);
-foreach ($lots as &$lot){
-  $lot['winner_id'] = get_winner($connection, $lot['lot_id']) ?? null;
-}
-unset($lot);
 
-foreach ($lots as $lot){
-    if ($lot['winner_id']){
-        add_winner_to_lot($connection, $lot['lot_id'], $lot['winner_id']);
+$transport = (new Swift_SmtpTransport('phpdemo.ru', 25))
+    ->setUsername('keks@phpdemo.ru')
+    ->setPassword('htmlacademy');
+$mailer = new Swift_Mailer($transport);
+
+foreach ($lots as $lot) {
+    $winner = get_winner($connection, $lot['id']);
+    if (isset($winner['user_id'])) {
+        add_winner_to_lot($connection, $lot['id'], $winner['user_id']);
+        $message = get_message($winner, $lot['id']);
+        $result = $mailer->send($message);
     }
 }
-//send_mail_to_winner();

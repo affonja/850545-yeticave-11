@@ -349,27 +349,38 @@ SQL;
 
 function get_lots_without_win(mysqli $connection): array
 {
-    $sql = "SELECT id AS lot_id FROM lots WHERE end_time <= NOW() AND winner_id IS NULL";
+    $sql = "SELECT id FROM lots WHERE end_time <= NOW() AND winner_id IS NULL";
     $lots = mysqli_fetch_all(mysqli_query($connection, $sql), MYSQLI_ASSOC);
 
     return $lots ?? [];
 }
 
-function get_winner(mysqli $connection, int $lot_id): ?int
+function get_winner(mysqli $connection, int $lot_id): array
 {
-    $sql = "SELECT user_id FROM bets WHERE lot_id = $lot_id ORDER BY sum DESC LIMIT 1";
-    $result = mysqli_fetch_all(mysqli_query($connection, $sql), MYSQLI_ASSOC);
-    $bet_id = $result[0]['user_id'] ?? null;
+    $sql = <<<SQL
+SELECT b.user_id,
+       u.name as user_name,
+       u.email,
+       l.name as lot_name
+FROM bets b
+         INNER JOIN users u ON b.user_id = u.id
+         INNER JOIN lots l ON b.lot_id = l.id
+WHERE lot_id = $lot_id
+ORDER BY SUM
+    DESC
+LIMIT 1
+SQL;
+    $result = mysqli_fetch_array(mysqli_query($connection, $sql), MYSQLI_ASSOC);
 
-    return $bet_id;
+    return $result ?? [];
 }
 
 function add_winner_to_lot(mysqli $connection, int $lot, int $winner): bool
 {
     $sql = "UPDATE lots SET winner_id = $winner WHERE id = $lot";
-    if (mysqli_query($connection, $sql)){
-        return true;
+    if (!mysqli_query($connection, $sql)) {
+        exit(mysqli_error($connection));
     }
 
-    return false;
+    return true;
 }
