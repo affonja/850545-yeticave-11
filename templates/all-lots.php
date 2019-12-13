@@ -1,6 +1,6 @@
 <?php
 /**
- * @var string $query
+ * @var string $category_name
  * @var int $cur_page
  * @var array $lots
  * @var array $pages
@@ -10,8 +10,7 @@
 <?= include_template('nav.php', ['categories' => $categories]) ?>
 <div class="container">
     <section class="lots">
-
-        <h2>Результаты поиска по запросу «<span><?= $query; ?></span>»</h2>
+        <h2>Все лоты в категории <span><?= $category_name; ?></span></h2>
         <?php if (is_array($lots)): ; ?>
             <ul class="lots__list">
                 <?php foreach ($lots as $lot) : ?>
@@ -26,7 +25,7 @@
         echo include_template('paginator.php', [
             'pages'    => $pages,
             'cur_page' => $cur_page,
-            'param'    => 'search='.$query
+            'param'    => 'catid='.$category_id
         ]);
     }; ?>
 </div>

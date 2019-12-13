@@ -163,7 +163,7 @@ function get_user(mysqli $connection, string $email): array
     return $user;
 }
 
-function get_lots_count(mysqli $connection, string $query)
+function get_search_lots_count(mysqli $connection, string $query)
 {
     if ($query) {
         $sql = <<<SQL
@@ -383,4 +383,63 @@ function add_winner_to_lot(mysqli $connection, int $lot, int $winner): bool
     }
 
     return true;
+}
+
+function get_lots_by_category(
+    mysqli $connection,
+    int $category,
+    int $limit,
+    int $offset
+): array {
+    $sql = <<<SQL
+SELECT l.id,
+       l.name,
+       l.bet_start,
+       l.img,
+       l.end_time,
+       c.name     AS category,
+       MAX(b.sum) as max_bet
+FROM lots l
+         INNER JOIN categories c ON l.category_id = c.id
+         LEFT JOIN bets b ON l.id = b.lot_id
+WHERE l.category_id = ?
+GROUP BY l.id, l.creation_time
+ORDER BY l.creation_time DESC
+LIMIT $limit OFFSET $offset
+SQL;
+    $stmt = db_get_prepare_stmt($connection, $sql, [$category]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        exit(mysqli_error($connection));
+    }
+
+    return $result = mysqli_fetch_all($result, MYSQLI_ASSOC) ?? [];
+}
+
+function get_lots_by_cat_count(mysqli $connection, int $category)
+{
+    if ($category !== 0) {
+        $sql = <<<SQL
+SELECT COUNT(*) as count_item
+FROM lots
+WHERE category_id = ?
+SQL;
+        $stmt = db_get_prepare_stmt($connection, $sql, [$category]);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        if (!$result) {
+            exit(mysqli_error($connection));
+        }
+
+        $lots_found = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        if ($lots_found['count_item'] > 0) {
+            return $lots_found['count_item'];
+        }
+
+        return 'Нет лотов по вашему запросу';
+    }
+
+    return 'Ошибка';
 }
