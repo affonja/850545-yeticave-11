@@ -45,7 +45,7 @@
                 ) {
                     $classname = 'visually-hidden';
                 } ?>
-                <form class="lot-item__form <?= $classname; ?>"
+                <form class="lot-item__form <?= $classname ?? ''; ?>"
                       action="/lot.php?id=<?= $lot['id']; ?>" method="post"
                       autocomplete="off">
                     <?php $classname = $error_bet === null ? ''
