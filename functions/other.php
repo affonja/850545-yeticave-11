@@ -10,8 +10,10 @@ function get_time_remaining(string $time): array
     }
 
     $time_remaining = [
-        floor($time_diff / 3600),
-        floor(($time_diff % 3600) / 60),
+        'h'    => floor(($time_diff % 86400) / 3600),
+        'm'    => floor(($time_diff % 3600) / 60),
+        'd'    => floor($time_diff / 86400),
+        'diff' => $time_diff
     ];
 
     return $time_remaining;
@@ -36,4 +38,58 @@ function save_file(array $lot_img): string
         substr($link, 1));
 
     return $link;
+}
+
+function get_timer_state(array $lot, int $user_id = 0, $win_bets = []): array
+{
+    $time_remaining = get_time_remaining($lot['end_time']);
+    $timer = [
+        'state'   => '',
+        'message' =>
+            sprintf("%02d", $time_remaining['d']).':'
+            .sprintf("%02d", $time_remaining['h']).':'
+            .sprintf("%02d", $time_remaining['m']),
+        'class'   => ''
+    ];
+
+    if ($time_remaining['diff'] === 0) {
+        $timer['state'] = 'timer--end';
+        $timer['message'] = 'Торги окончены';
+        $timer['class'] = 'rates__item--end';
+        if (isset($lot['bet_id']) and in_array($lot['bet_id'], $win_bets)) {
+            $timer['state'] = 'timer--win';
+            $timer['message'] = 'Ставка выиграла';
+            $timer['class'] = 'rates__item--win';
+        }
+    } elseif ($time_remaining['diff'] < 3600) {
+        $timer['state'] = 'timer--finishing';
+    }
+
+    return $timer;
+}
+
+function get_bet_timeback(string $bets_creation_time): string
+{
+    $now = time();
+    $bet_time = strtotime($bets_creation_time);
+    $diff_time = $now - $bet_time;
+    if ($diff_time < 59) {
+        $time_back = $diff_time.' '.get_noun_plural_form($diff_time,
+                'секунда', 'секунды', 'секунд').' назад';
+    } elseif ($diff_time < 3600) {
+        $diff_time = floor($diff_time / 60);
+        $time_back = $diff_time.' '.get_noun_plural_form($diff_time,
+                'минута', 'минуты', 'минут').' назад';
+    } elseif ($diff_time < 86400) {
+        $diff_time = floor($diff_time / 3600);
+        $time_back = $diff_time.' '.get_noun_plural_form($diff_time,
+                'час', 'часа', 'часов').' назад';
+    } elseif ($diff_time < 172800) {
+        $diff_time = floor($diff_time / 86400);
+        $time_back = date('Вчера в H:i', $bet_time);
+    } elseif ($diff_time > 86400) {
+        $time_back = date('d.m.y в H:i', $bet_time);
+    }
+
+    return $time_back;
 }

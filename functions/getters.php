@@ -45,3 +45,19 @@ function get_user_form_login_data(array $user_data): array
 
     return $user_data;
 }
+
+function get_message(array $winner, int $lot_id): Swift_Message
+{
+    $msg_content = include_template('email.php', [
+        'winner' => $winner,
+        'lot_id' => $lot_id
+    ]);
+
+    $message = (new Swift_Message())
+        ->setSubject('Ваша ставка победила')
+        ->setFrom(['keks@phpdemo.ru' => 'Yeticave'])
+        ->setTo([$winner['email'] => $winner['user_name']])
+        ->setBody($msg_content, 'text/html');
+
+    return $message;
+}
