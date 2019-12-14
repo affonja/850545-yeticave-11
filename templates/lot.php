@@ -2,6 +2,7 @@
 /**
  * @var array $lot
  * @var $error_bet
+ * @var $bets
  */
 ?>
 
@@ -39,9 +40,12 @@
                     </div>
                 </div>
                 <?php
+                $last_better = $bets[0]['user_id'] ?? 0;
                 if (
                     !isset($_SESSION['user']) or
-                    $timer['class'] !== ''
+                    $timer['class'] !== '' or
+                    $lot['owner_id'] === (int)$_SESSION['id'] or
+                    $last_better === (int)$_SESSION['id']
                 ) {
                     $classname = 'visually-hidden';
                 } ?>

@@ -97,6 +97,7 @@ function get_lot(mysqli $connection, int $id): array
             l.id, l.name, l.img, l.description,
             l.bet_start, l.bet_step,
             l.creation_time, l.end_time,
+            l.owner_id,
             c.name AS category,
             MAX(b.sum) as max_bet
             FROM lots l
@@ -247,7 +248,7 @@ SQL;
 function get_bets_for_lot(mysqli $connection, int $lot_id): array
 {
     $sql = <<<SQL
-SELECT name, sum, b.creation_time FROM bets b 
+SELECT name, sum, b.creation_time, b.user_id FROM bets b 
 INNER JOIN users u ON b.user_id=u.id
 WHERE lot_id=?
 ORDER BY creation_time DESC 
