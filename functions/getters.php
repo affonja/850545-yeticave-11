@@ -24,27 +24,27 @@ function get_get_val(string $query): ?string
     return filter_input(INPUT_GET, $query);
 }
 
-function get_user_form_reg_data(array $user_data): array
-{
-    $user_data = filter_var_array($user_data, [
-        'email'    => FILTER_VALIDATE_EMAIL,
-        'password' => FILTER_DEFAULT,
-        'name'     => FILTER_DEFAULT,
-        'message'  => FILTER_DEFAULT
-    ], true);
+//function get_user_form_reg_data(array $user_data): array
+//{
+//    $user_data = filter_var_array($user_data, [
+//        'email'    => FILTER_DEFAULT,
+//        'password' => FILTER_DEFAULT,
+//        'name'     => FILTER_DEFAULT,
+//        'message'  => FILTER_DEFAULT
+//    ], true);
+//
+//    return $user_data;
+//}
 
-    return $user_data;
-}
-
-function get_user_form_login_data(array $user_data): array
-{
-    $user_data = filter_var_array($user_data, [
-        'email'    => FILTER_VALIDATE_EMAIL,
-        'password' => FILTER_DEFAULT
-    ], true);
-
-    return $user_data;
-}
+//function get_user_form_login_data(array $user_data): array
+//{
+//    $user_data = filter_var_array($user_data, [
+//        'email'    => FILTER_VALIDATE_EMAIL,
+//        'password' => FILTER_DEFAULT
+//    ], true);
+//
+//    return $user_data;
+//}
 
 function get_message(array $winner, int $lot_id): Swift_Message
 {

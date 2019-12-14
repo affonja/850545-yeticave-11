@@ -104,7 +104,7 @@ function validate_lot_file(array $file_data): ?string
     return null;
 }
 
-function validate_reg_form(mysqli $connection, array $user_data): array
+function validate_reg_form(mysqli $connection, array &$user_data): array
 {
     $errors = [];
     $errors['email'] = validate_email($connection, $user_data['email']);
@@ -116,11 +116,17 @@ function validate_reg_form(mysqli $connection, array $user_data): array
     return $errors;
 }
 
-function validate_email(mysqli $connection, $email): ?string
+function validate_email(mysqli $connection, string &$email): ?string
 {
-    if (!$email) {
+    if (empty($email)) {
         return 'Заполните поле';
+    } else {
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+        if (!$email){
+            return 'Некорректный email';
+        }
     }
+
     $email_is_double = get_email($connection, $email);
     if ($email_is_double) {
         return 'Такой email уже зарегистрирован';
@@ -168,7 +174,7 @@ function validate_contacts(string $message, int $min, int $max): ?string
     return null;
 }
 
-function validate_login_form(mysqli $connection, array $user_data): array
+function validate_login_form(mysqli $connection, array &$user_data): array
 {
     $errors = [];
     $errors['email'] = validate_email_exist($connection, $user_data['email']);
@@ -182,11 +188,17 @@ function validate_login_form(mysqli $connection, array $user_data): array
     return $errors;
 }
 
-function validate_email_exist(mysqli $connection, string $email): ?string
+function validate_email_exist(mysqli $connection, string &$email): ?string
 {
-    if (!$email) {
+    if (empty($email)) {
         return 'Заполните поле';
+    } else {
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+        if (!$email){
+            return 'Некорректный email';
+        }
     }
+
     $email_exist = get_email($connection, $email);
     if (!$email_exist) {
         return 'Такой email не зарегистрирован';
