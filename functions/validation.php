@@ -140,7 +140,7 @@ function validate_pass(string $pass): ?string
     if (!$pass) {
         return 'Заполните поле';
     } elseif (mb_strlen($pass) < 6) {
-        return 'Слишком короткий пароль';
+        return 'Слишком короткий пароль. Минимум 6 символов';
     }
 
     return null;
