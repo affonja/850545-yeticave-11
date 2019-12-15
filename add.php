@@ -6,7 +6,7 @@ $cat_ids = array_column($categories, 'id');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $file_data = $_FILES['lot_img'];
-    $lot_data = get_lot_form_data($_POST);
+    $lot_data = get_lot_form_data($_POST, $_SESSION['id']);
     $errors = validate_lot_form($lot_data, $file_data, $cat_ids);
 
     if (count($errors)) {

@@ -5,7 +5,7 @@ $categories = get_categories($connection);
 
 $cur_page = $_GET['page'] ?? 1;
 $item_per_page = 9;
-$search_query = $_GET['search'] ?? '';
+$search_query = trim($_GET['search']) ?? '';
 $lots_count = get_search_lots_count($connection, $search_query);
 
 if (is_int($lots_count)) {
@@ -28,7 +28,7 @@ if (is_int($lots_count)) {
 } else {
     $page_content = include_template('search.php', [
         'categories' => $categories,
-        'pages'      => 1,
+        'pages'      => [],
         'lots'       => null,
         'query'      => $search_query,
         'error'      => $lots_count

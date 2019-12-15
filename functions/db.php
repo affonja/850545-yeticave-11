@@ -17,9 +17,9 @@ function add_lot(mysqli $connection, array $lot): ?int
 INSERT INTO lots (
 name, category_id, description,
 bet_start, bet_step, end_time,
-img, creation_time,  owner_id )
+owner_id, img, creation_time )
 VALUES (
-       ?,?,?,?,?,?,?,NOW(),1
+       ?,?,?,?,?,?,?,?,NOW()
 )
 SQL;
     $stmt = db_get_prepare_stmt($connection, $sql, $lot);
@@ -443,4 +443,27 @@ SQL;
     }
 
     return 'Ошибка';
+}
+
+function get_contacts(mysqli $connection, int $lot_id):string
+{
+    $sql=<<<SQL
+SELECT u.contacts
+FROM bets b
+         INNER JOIN lots l ON b.lot_id = l.id
+         INNER JOIN users u ON l.owner_id = u.id
+WHERE b.lot_id = ?
+ORDER BY SUM DESC
+LIMIT 1
+SQL;
+
+    $stmt = db_get_prepare_stmt($connection, $sql, [$lot_id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result){
+        exit(mysqli_error($connection));
+    }
+
+    $contacts = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    return $contacts['contacts'];
 }

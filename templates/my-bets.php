@@ -11,9 +11,14 @@
                         <img src="<?= $bet['img']; ?>" width="54" height="40"
                              alt="<?= $bet['name']; ?>">
                     </div>
-                    <h3 class="rates__title"><a
-                                href="/lot.php/?id=<?= $bet['lot_id']; ?>"><?= $bet['name']; ?></a>
-                    </h3>
+                    <div>
+                        <h3 class="rates__title">
+                            <a href="/lot.php/?id=<?= $bet['lot_id']; ?>"><?= $bet['name']; ?></a>
+                        </h3>
+                        <?php if ($timer['state'] === 'timer--win'): ?>
+                            <p><?= $contacts[$bet['lot_id']] ;?></p>
+                        <?php endif; ?>
+                    </div>
                 </td>
                 <td class="rates__category">
                     <?= $bet['category']; ?>
