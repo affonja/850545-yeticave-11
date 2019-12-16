@@ -348,7 +348,7 @@ SQL;
     return array_column($bets_win, 'id');
 }
 
-function get_lots_without_win(mysqli $connection): array
+function get_expired_lots_without_win(mysqli $connection): array
 {
     $sql = "SELECT id FROM lots WHERE end_time <= NOW() AND winner_id IS NULL";
     $lots = mysqli_fetch_all(mysqli_query($connection, $sql), MYSQLI_ASSOC);
