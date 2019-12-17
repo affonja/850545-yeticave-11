@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (!$bet or $bet < $lot['min_next_bet']) {
         $error_bet = 'Введите корректную сумму';
     } else {
-        get_add_bet($connection, $bet, $lot_id, $_SESSION['id']);
+        add_bet($connection, $bet, $lot_id, $_SESSION['id']);
         $lot = get_lot($connection, $lot_id);
         $bets = get_bets_for_lot($connection, $lot_id);
     }

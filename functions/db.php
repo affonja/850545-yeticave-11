@@ -221,7 +221,7 @@ SQL;
     return $lots;
 }
 
-function get_add_bet(
+function add_bet(
     mysqli $connection,
     int $bet,
     int $lot_id,
