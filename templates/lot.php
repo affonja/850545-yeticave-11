@@ -1,8 +1,9 @@
 <?php
 /**
  * @var array $lot
- * @var $error_bet
- * @var $bets
+ * @var array $error_bet
+ * @var array $bets,
+ * @var int $last_better
  */
 ?>
 
@@ -40,7 +41,6 @@
                     </div>
                 </div>
                 <?php
-                $last_better = $bets[0]['user_id'] ?? 0;
                 if (
                     !isset($_SESSION['user']) or
                     $timer['class'] !== '' or

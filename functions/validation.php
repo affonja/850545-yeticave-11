@@ -122,7 +122,7 @@ function validate_email(mysqli $connection, string &$email): ?string
         return 'Заполните поле';
     } else {
         $email = filter_var($email, FILTER_VALIDATE_EMAIL);
-        if (!$email){
+        if (!$email) {
             return 'Некорректный email';
         }
     }
@@ -194,7 +194,7 @@ function validate_email_exist(mysqli $connection, string &$email): ?string
         return 'Заполните поле';
     } else {
         $email = filter_var($email, FILTER_VALIDATE_EMAIL);
-        if (!$email){
+        if (!$email) {
             return 'Некорректный email';
         }
     }
@@ -221,5 +221,20 @@ function validate_email_pass(
         return 'Неверный пароль';
     }
 
+    return null;
+}
+
+function validate_bet_form(string $bet, int $min_bet, int $owner, int $user=0, int $last_better):?string
+{
+    if (!$bet) {
+        return $error_bet = 'Введите сумму ставки';
+    } elseif ($bet < $min_bet) {
+        return $error_bet = 'Введите корректную сумму';
+    } elseif (
+        $user === $owner or
+        $user === $last_better
+    ) {
+        return $error_bet = 'Вы не можете сделать ставку';
+    }
     return null;
 }
