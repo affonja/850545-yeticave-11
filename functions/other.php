@@ -10,9 +10,11 @@ function get_time_remaining(string $time): array
     }
 
     $time_remaining = [
-        'h'    => floor(($time_diff % 86400) / 3600),
+//        'h'    => floor(($time_diff % 86400) / 3600),
+//        'm'    => floor(($time_diff % 3600) / 60),
+//        'd'    => floor($time_diff / 86400),
+        'h'    => floor($time_diff / 3600),
         'm'    => floor(($time_diff % 3600) / 60),
-        'd'    => floor($time_diff / 86400),
         'diff' => $time_diff
     ];
 
@@ -46,8 +48,8 @@ function get_timer_state(array $lot, int $user_id = 0, $win_bets = []): array
     $timer = [
         'state'   => '',
         'message' =>
-            sprintf("%02d", $time_remaining['d']).':'
-            .sprintf("%02d", $time_remaining['h']).':'
+//            sprintf("%02d", $time_remaining['d']).':'
+            sprintf("%02d", $time_remaining['h']).':'
             .sprintf("%02d", $time_remaining['m']),
         'class'   => ''
     ];
