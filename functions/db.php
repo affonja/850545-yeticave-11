@@ -258,9 +258,8 @@ SQL;
     return $bets ?? [];
 }
 
-function get_bets_for_user(mysqli $connection, int $user_id): array
+function get_lots_where_better(mysqli $connection, int $user_id): array
 {
-
     $sql = <<<SQL
 SELECT l.img,
        l.name,

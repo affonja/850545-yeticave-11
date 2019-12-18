@@ -10,9 +10,6 @@ function get_time_remaining(string $time): array
     }
 
     $time_remaining = [
-//        'h'    => floor(($time_diff % 86400) / 3600),
-//        'm'    => floor(($time_diff % 3600) / 60),
-//        'd'    => floor($time_diff / 86400),
         'h'    => floor($time_diff / 3600),
         'm'    => floor(($time_diff % 3600) / 60),
         'diff' => $time_diff
@@ -40,34 +37,6 @@ function save_file(array $lot_img): string
         substr($link, 1));
 
     return $link;
-}
-
-function get_timer_state(array $lot, int $user_id = 0, $win_bets = []): array
-{
-    $time_remaining = get_time_remaining($lot['end_time']);
-    $timer = [
-        'state'   => '',
-        'message' =>
-//            sprintf("%02d", $time_remaining['d']).':'
-            sprintf("%02d", $time_remaining['h']).':'
-            .sprintf("%02d", $time_remaining['m']),
-        'class'   => ''
-    ];
-
-    if ($time_remaining['diff'] === 0) {
-        $timer['state'] = 'timer--end';
-        $timer['message'] = 'Торги окончены';
-        $timer['class'] = 'rates__item--end';
-        if (isset($lot['bet_id']) and in_array($lot['bet_id'], $win_bets)) {
-            $timer['state'] = 'timer--win';
-            $timer['message'] = 'Ставка выиграла';
-            $timer['class'] = 'rates__item--win';
-        }
-    } elseif ($time_remaining['diff'] < 3600) {
-        $timer['state'] = 'timer--finishing';
-    }
-
-    return $timer;
 }
 
 function get_bet_timeback(string $bets_creation_time): string

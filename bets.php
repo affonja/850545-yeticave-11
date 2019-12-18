@@ -13,7 +13,7 @@ if (!$user_id) {
     ]);
 }
 
-$bets = get_bets_for_user($connection, $user_id);
+$lots = get_lots_where_better($connection, $user_id);
 $is_winner = get_lots_where_winner($connection, $user_id);
 if (!empty($is_winner)) {
     $win_bets = get_win_bets_for_user($connection, $is_winner);
@@ -25,7 +25,7 @@ if (!empty($is_winner)) {
 $page_content = include_template('my-bets.php', [
     'error'      => $error,
     'categories' => $categories,
-    'bets'       => $bets,
+    'lots'       => $lots,
     'user_id'    => $user_id,
     'win_bets'   => $win_bets ?? [],
     'contacts' => $contacts ?? []

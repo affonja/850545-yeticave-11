@@ -34,11 +34,7 @@
                         .' <b class="rub">р</b>'; ?>
                 </span>
             </div>
-            <?php $timer = get_timer_state($lot); ?>
-            <div class="lot__timer timer
-            <?= $timer['state']; ?>">
-                <?= $timer['message']; ?>
-            </div>
+            <?= include_template('timer.php', ['lot' => $lot]); ?>
         </div>
     </div>
 </li>

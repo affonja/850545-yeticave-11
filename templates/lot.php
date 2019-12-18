@@ -2,7 +2,7 @@
 /**
  * @var array $lot
  * @var array $error_bet
- * @var array $bets,
+ * @var array $bets ,
  * @var int $last_better
  */
 ?>
@@ -21,10 +21,8 @@
             <p class="lot-item__description"><?= $lot['description']; ?></p>
         </div>
         <div class="lot-item__right">
-            <?php $timer = get_timer_state($lot); ?>
             <div class="lot-item__state">
-                <div class="lot-item__timer timer <?= $timer['state']; ?>">
-                    <?= $timer['message']; ?>                </div>
+                <?= include_template('timer.php', ['lot' => $lot]); ?>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount">Текущая цена</span>
@@ -43,7 +41,7 @@
                 <?php
                 if (
                     !isset($_SESSION['user']) or
-                    $timer['class'] !== '' or
+                    $lot['end_time'] < date('Y-m-d H:m:i') or
                     $lot['owner_id'] === (int)$_SESSION['id'] or
                     $last_better === (int)$_SESSION['id']
                 ) {
