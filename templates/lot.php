@@ -1,8 +1,9 @@
 <?php
 /**
+ * @var array $categories
  * @var array $lot
- * @var array $error_bet
- * @var array $bets ,
+ * @var ?array $error_bet
+ * @var array $bets
  * @var int $last_better
  */
 ?>

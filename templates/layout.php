@@ -1,6 +1,8 @@
 <?php
 /**
  * @var string $page_title
+ * @var string $page_content
+ * @var array $categories
  */
 ?>
 

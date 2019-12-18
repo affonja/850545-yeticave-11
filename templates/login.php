@@ -1,6 +1,7 @@
 <?php
 /**
  * @var array $errors
+ * @var array $categories
  */
 ?>
 

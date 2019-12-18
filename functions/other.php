@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Получает оставшееся время в формате hh:mm на основе указанного времени
+ * окончания размещения лота
+ *
+ * @param  string  $time  Время окончания размещения лота
+ *
+ * @return array
+ * Массив [
+ *  ['h']   - количество часов
+ *  ['m']   - количество минут
+ *  ['diff']- оставшееся время в секундах
+ * ]
+ */
 function get_time_remaining(string $time): array
 {
     $time_now = time();
@@ -18,6 +31,13 @@ function get_time_remaining(string $time): array
     return $time_remaining;
 }
 
+/**
+ * Форматирует число, отделяет пробелом каждые три разряда с конца числа
+ *
+ * @param  int  $price  Число
+ *
+ * @return string   Отформатированное число
+ */
 function price_format(int $price): string
 {
     $price = ceil($price);
@@ -28,6 +48,13 @@ function price_format(int $price): string
     return $price;
 }
 
+/**
+ * Сохраняет загруженный файл из формы в /uploads/ с присвоением уникального имени
+ *
+ * @param  array  $lot_img  Данные загруженного файла
+ *
+ * @return string   Ссылка на сохраненный файл
+ */
 function save_file(array $lot_img): string
 {
     $file_name = $lot_img['name'];
@@ -39,6 +66,20 @@ function save_file(array $lot_img): string
     return $link;
 }
 
+/**
+ * Формирует строку для периода, прошедшего с указанного времени.
+ * В зависимости от прошедшего времени формирует строки
+ *  'n секунд(а/ы) назад'
+ *  'n минут(а/ы) назад'
+ *  'n час(а/ов) назад'
+ *  'Вчера в hh:mm'
+ *  'dd.mm.yy в hh:mm'
+ *
+ *
+ * @param  string  $bets_creation_time  время, от которого считается период
+ *
+ * @return string   Сформированная строка
+ */
 function get_bet_timeback(string $bets_creation_time): string
 {
     $now = time();

@@ -4,6 +4,7 @@
  * @var int $lot_id
  */
 ?>
+
 <h1>Поздравляем с победой</h1>
 <p>Здравствуйте, <?= $winner['user_name'] ?>></p>
 <p>Ваша ставка для лота <a href="http://yeticave/lot.php?id=<?= $lot_id ?>">

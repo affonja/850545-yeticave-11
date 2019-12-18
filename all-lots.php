@@ -27,9 +27,12 @@ if (is_int($lots_count)) {
         'category_id'   => $category_id
     ]);
 } else {
-    $page_content = include_template('404.php', [
+    $page_content = include_template('all-lots.php', [
         'categories' => $categories,
-        'error'      => $lots_count
+        'error'      => $lots_count,
+        'category_name' => $categories[$category_id - 1]['name'],
+        'lots'          => null,
+        'pages'         => null
     ]);
 }
 

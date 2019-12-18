@@ -1,5 +1,7 @@
 <?php
 /**
+ * @var array $categories
+ * @var array $lots
  * @var array $contacts
  * @var array $win_bets
  */

@@ -4,6 +4,7 @@
  * @var int $cur_page
  * @var array $lots
  * @var array $pages
+ * @var array $categories
  */
 ?>
 
