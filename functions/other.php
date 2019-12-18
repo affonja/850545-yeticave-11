@@ -62,5 +62,5 @@ function get_bet_timeback(string $bets_creation_time): string
         $time_back = date('d.m.y в H:i', $bet_time);
     }
 
-    return $time_back;
+    return $time_back ?? '';
 }

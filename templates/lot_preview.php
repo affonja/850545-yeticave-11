@@ -34,7 +34,7 @@
                         .' <b class="rub">р</b>'; ?>
                 </span>
             </div>
-            <?= include_template('timer.php', ['lot' => $lot]); ?>
+            <?= include_template('timer.php', ['lot' => $lot, 'timer_class' => 'lot__timer']); ?>
         </div>
     </div>
 </li>

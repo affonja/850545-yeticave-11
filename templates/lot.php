@@ -22,7 +22,7 @@
         </div>
         <div class="lot-item__right">
             <div class="lot-item__state">
-                <?= include_template('timer.php', ['lot' => $lot]); ?>
+                <?= include_template('timer.php', ['lot' => $lot, 'timer_class' => 'lot-item__timer']); ?>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount">Текущая цена</span>

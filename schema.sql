@@ -3,16 +3,16 @@ USE yeticave;
 
 CREATE TABLE categories(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	name VARCHARACTER(50) NOT NULL UNIQUE,
-	code VARCHARACTER(50) NOT NULL UNIQUE
+	name VARCHAR(50) NOT NULL UNIQUE,
+	code VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE lots(
                      id            INT AUTO_INCREMENT PRIMARY KEY,
                      creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-                     name VARCHARACTER(128) NOT NULL,
+                     name VARCHAR(128) NOT NULL,
                      description   TEXT,
-                     img VARCHARACTER(255),
+                     img VARCHAR(255),
                      bet_start     INT       NOT NULL,
                      end_time      TIMESTAMP NOT NULL,
                      bet_step      INT       NOT NULL,
@@ -36,10 +36,10 @@ CREATE TABLE bets(
 CREATE TABLE users(
 	id INT AUTO_INCREMENT PRIMARY KEY,	
 	creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-	email VARCHARACTER(64) NOT NULL UNIQUE,
-	name VARCHARACTER(64) NOT NULL,
-	password VARCHARACTER(64) NOT NULL,
-	contacts VARCHARACTER(255) NOT NULL
+	email VARCHAR(64) NOT NULL UNIQUE,
+	name VARCHAR(64) NOT NULL,
+	password VARCHAR(64) NOT NULL,
+	contacts VARCHAR(255) NOT NULL
 );
 
 ALTER TABLE lots

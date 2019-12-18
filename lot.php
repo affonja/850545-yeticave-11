@@ -20,7 +20,7 @@ $last_better = $bets[0]['user_id'] ?? 0;
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $bet = filter_input(INPUT_POST, 'cost', FILTER_VALIDATE_INT);
     $error_bet = validate_bet_form($bet, $lot['min_next_bet'], $lot['owner_id'],
-        (int)$_SESSION['id'], $last_better);
+        $last_better, (int)$_SESSION['id']);
 
     if (!$error_bet) {
         add_bet($connection, (int)$bet, $lot_id, $_SESSION['id']);

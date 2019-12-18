@@ -224,7 +224,13 @@ function validate_email_pass(
     return null;
 }
 
-function validate_bet_form(string $bet, int $min_bet, int $owner, int $user=0, int $last_better):?string
+function validate_bet_form(
+    string $bet,
+    int $min_bet,
+    int $owner,
+    int $last_better,
+    int $user = 0
+):?string
 {
     if (!$bet) {
         return $error_bet = 'Введите сумму ставки';

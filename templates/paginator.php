@@ -1,8 +1,7 @@
 <?php
 /**
  * @var int $cur_page
- * @var string $query
- * @var array $pages ,
+ * @var array $pages
  * @var string $param
  */
 ?>
@@ -27,6 +26,6 @@
             : $class_hide = ''; ?>
         <a <?= "class='$class_hide'"; ?>
                 href="<?= $_SERVER['PHP_SELF'] ?>?<?= $param; ?>&page=<?= $cur_page
-                + 1; ?>">Вперед</a></li>
+                + 1; ?>">Вперед</a>
     </li>
 </ul>

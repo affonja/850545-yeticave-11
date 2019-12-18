@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var array $win_bets
+ * @var string $timer_class
+ */
+
 $time_remaining = get_time_remaining($lot['end_time']);
 $timer = [
     'state'   => '',
@@ -21,13 +26,8 @@ if ($time_remaining['diff'] === 0) {
     $timer['state'] = 'timer--finishing';
 }
 
-if ($_SERVER['SCRIPT_NAME'] == '/index.php') {
-    $classname_templ = 'lot__timer ';
-} elseif ($_SERVER['SCRIPT_NAME'] == '/lot.php') {
-    $classname_templ = 'lot-item__timer';
-}
 ?>
 
-<div class="<?= $classname_templ; ?> timer <?= $timer['state']; ?>">
+<div class="<?= $timer_class; ?> timer <?= $timer['state']; ?>">
     <?= $timer['message']; ?>
 </div>

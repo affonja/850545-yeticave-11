@@ -402,7 +402,7 @@ SELECT l.id,
 FROM lots l
          INNER JOIN categories c ON l.category_id = c.id
          LEFT JOIN bets b ON l.id = b.lot_id
-WHERE l.category_id = ?
+WHERE l.category_id = ? AND l.end_time > NOW()
 GROUP BY l.id, l.creation_time
 ORDER BY l.creation_time DESC
 LIMIT $limit OFFSET $offset
