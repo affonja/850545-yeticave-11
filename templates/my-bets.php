@@ -12,16 +12,29 @@
         <?php foreach ($lots as $lot): ?>
             <?php
             $time_remaining = get_time_remaining($lot['end_time']);
-            $timer = [];
+            $timer = [
+                'state'   => '',
+                'message' =>
+                    sprintf("%02d", $time_remaining['h']).':'
+                    .sprintf("%02d", $time_remaining['m']),
+                'class'   => ''
+            ];
             if ($time_remaining['diff'] === 0) {
+                $timer['state'] = 'timer--end';
+                $timer['message'] = 'Торги окончены';
                 $timer['class'] = 'rates__item--end';
-                if (in_array($lot['bet_id'], $win_bets)) {
+                if (isset($lot['bet_id']) and in_array($lot['bet_id'],
+                        $win_bets)
+                ) {
                     $timer['state'] = 'timer--win';
+                    $timer['message'] = 'Ставка выиграла';
                     $timer['class'] = 'rates__item--win';
                 }
+            } elseif ($time_remaining['diff'] < 3600) {
+                $timer['state'] = 'timer--finishing';
             }
             ?>
-            <tr class="rates__item <?= $timer['class'] ?? ''; ?>">
+            <tr class="rates__item <?= $timer['class']; ?>">
                 <td class=" rates__info">
                     <div class="rates__img">
                         <img src="<?= $lot['img']; ?>" width="54" height="40"
@@ -31,9 +44,7 @@
                         <h3 class="rates__title">
                             <a href="/lot.php/?id=<?= $lot['lot_id']; ?>"><?= $lot['name']; ?></a>
                         </h3>
-                        <?php if (isset($timer['state']) and
-                            $timer['state'] === 'timer--win'
-                        ): ?>
+                        <?php if ($timer['state'] === 'timer--win'): ?>
                             <p>
                                 <?= $contacts[$lot['lot_id']]; ?>
                             </p>
@@ -44,10 +55,9 @@
                     <?= $lot['category']; ?>
                 </td>
                 <td class="rates__timer">
-                    <?= include_template('timer.php', [
-                        'lot'      => $lot,
-                        'win_bets' => $win_bets
-                    ]); ?>
+                    <div class="timer <?= $timer['state']; ?>">
+                        <?= $timer['message']; ?>
+                    </div>
                 </td>
                 <td class="rates__price">
                     <?= price_format($lot['sum'])
