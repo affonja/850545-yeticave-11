@@ -100,13 +100,14 @@ function get_categories(mysqli $connection): array
 }
 
 /**
- * Получает массив из 6 самых новых активные лотов, их категории и максимальную ставку
+ * Получает массив из n самых новых активные лотов, их категории и максимальную ставку
  *
  * @param  mysqli  $connection  Ресурс соединения
+ * @param int $limit Количество получаемых записей
  *
  * @return array    Массив лотов или пустой, если лотов нет
  */
-function get_active_lots(mysqli $connection): array
+function get_active_lots(mysqli $connection, int $limit): array
 {
     $sql = <<<SQL
         SELECT
@@ -119,7 +120,7 @@ function get_active_lots(mysqli $connection): array
         LEFT JOIN bets b ON l.id = b.lot_id
         WHERE l.end_time > NOW()
     GROUP BY l.id, l.creation_time
-    ORDER BY l.creation_time DESC LIMIT 6
+    ORDER BY l.creation_time DESC LIMIT $limit
 SQL;
     $result = mysqli_query($connection, $sql);
 
