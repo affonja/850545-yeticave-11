@@ -4,11 +4,10 @@
  * Валидирует данные полученные из формы
  *
  * @param  array  $lot_data  Массив с данными из формы
- * @param $file_data    Массив данных загруженного файла
+ * @param  array  $file_data  Массив данных загруженного файла
  * @param  array  $cat_ids  Массив с существующими категориями товаров
  *
  * @return array    Массив с текстом ошибок валидации
- * @throws Exception
  */
 function validate_lot_form(array $lot_data, $file_data, array $cat_ids): array
 {
@@ -51,12 +50,12 @@ function validate_lot_name(string $name): ?string
 }
 
 /**
- * Проверяет наличие id категории в списке существующих категорий
+ * Проверяет наличие id категории в массиве существующих категорий
  *
  * @param  string  $category  id проверяемой категории
- * @param  array  $category_list  список id существующих категорий
+ * @param  array  $category_list  массив id существующих категорий
  *
- * @return string|null  Текст ошибки или null, если id найден в списке категорий
+ * @return string|null  Текст ошибки или null, если id найден в массиве категорий
  */
 function validate_lot_category(string $category, array $category_list): ?string
 {
@@ -136,7 +135,6 @@ function validate_lot_step(int $step): ?string
  * @param  string  $interval  минимальный интервал
  *
  * @return string|null  Текст ошибки или null, если соответствует критериям
- * @throws Exception
  */
 function validate_lot_date(string $date, string $interval): ?string
 {

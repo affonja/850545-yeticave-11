@@ -38,7 +38,7 @@
                   action="/search.php" autocomplete="off">
                 <input type="search" name="search"
                        placeholder="Поиск лота" <?= 'value="'
-                .get_get_val('search').'"'; ?>>
+                .strip_tags(get_get_val('search')).'"'; ?>>
                 <input class="main-header__search-btn" type="submit" name="find"
                        value="Найти">
             </form>
@@ -48,7 +48,7 @@
             <nav class="user-menu">
                 <?php if (isset($_SESSION['user'])) : ?>
                     <div class="user-menu__logged">
-                        <p><?= $_SESSION['user']; ?></p>
+                        <p><?= strip_tags($_SESSION['user']); ?></p>
                         <a class="user-menu__bets"
                            href="/bets.php?id=<?= $_SESSION['id']; ?>">Мои
                             ставки</a>

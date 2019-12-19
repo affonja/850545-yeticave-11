@@ -40,15 +40,15 @@
                 <td class=" rates__info">
                     <div class="rates__img">
                         <img src="<?= $lot['img']; ?>" width="54" height="40"
-                             alt="<?= $lot['name']; ?>">
+                             alt="<?= strip_tags($lot['name']); ?>">
                     </div>
                     <div>
                         <h3 class="rates__title">
-                            <a href="/lot.php/?id=<?= $lot['lot_id']; ?>"><?= $lot['name']; ?></a>
+                            <a href="/lot.php/?id=<?= $lot['lot_id']; ?>"><?= strip_tags($lot['name']); ?></a>
                         </h3>
                         <?php if ($timer['state'] === 'timer--win'): ?>
                             <p>
-                                <?= $contacts[$lot['lot_id']]; ?>
+                                <?= strip_tags($contacts[$lot['lot_id']]); ?>
                             </p>
                         <?php endif; ?>
                     </div>

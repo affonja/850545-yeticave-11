@@ -3,7 +3,7 @@
 /**
  * Фильтрует данные полученные из формы. Добавляет в массив id пользователя, отправившего форму
  *
- * @param $lot_data Массив с данными
+ * @param  array  $lot_data  Массив с данными
  * @param  int  $id  id пользователя
  *
  * @return array Отфильтрованный массив данных
@@ -32,7 +32,7 @@ function get_lot_form_data($lot_data, int $id): array
  */
 function get_post_val(string $name): ?string
 {
-    return filter_input(INPUT_POST, $name);
+    return strip_tags(filter_input(INPUT_POST, $name));
 }
 
 /**

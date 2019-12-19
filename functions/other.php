@@ -75,7 +75,6 @@ function save_file(array $lot_img): string
  *  'Вчера в hh:mm'
  *  'dd.mm.yy в hh:mm'
  *
- *
  * @param  string  $bets_creation_time  время, от которого считается период
  *
  * @return string   Сформированная строка

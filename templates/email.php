@@ -6,9 +6,9 @@
 ?>
 
 <h1>Поздравляем с победой</h1>
-<p>Здравствуйте, <?= $winner['user_name'] ?>></p>
+<p>Здравствуйте, <?= strip_tags($winner['user_name']); ?>></p>
 <p>Ваша ставка для лота <a href="http://yeticave/lot.php?id=<?= $lot_id ?>">
-        <?= $winner['lot_name'] ?></a> победила.</p>
+        <?= strip_tags($winner['lot_name']); ?></a> победила.</p>
 <p>Перейдите по ссылке <a
             href="http://yeticave/bets.php?id=<?= $winner['user_id'] ?>">мои
         ставки</a>,

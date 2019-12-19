@@ -47,7 +47,7 @@ if (!$lot) {
 }
 
 print(include_template('layout.php', [
-    'page_title'   => $lot['name'] ?? 'Ошибка',
+    'page_title'   => strip_tags($lot['name']) ?? 'Ошибка',
     'page_content' => $page_content,
     'categories'   => $categories
 ]));

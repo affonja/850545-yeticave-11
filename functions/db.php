@@ -178,9 +178,9 @@ SQL;
  * Проверяет существование email в таблице users
  *
  * @param  mysqli  $connection  Ресурс соединения
- * @param $email    Проверяемый email
+ * @param string|null $email Проверяемый email
  *
- * @return bool     true если email существует, иначе false
+ * @return bool  true если email существует, иначе false
  */
 function get_email(mysqli $connection, $email): bool
 {
@@ -228,8 +228,10 @@ function get_pass(mysqli $connection, string $email): array
  */
 function get_user(mysqli $connection, string $email): array
 {
-    $sql = "SELECT id, name FROM users WHERE email = '$email'";
-    $result = mysqli_query($connection, $sql);
+    $sql = "SELECT id, name FROM users WHERE email = ?";
+    $stmt = db_get_prepare_stmt($connection, $sql, [$email]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
     if (!$result) {
         exit(mysqli_error($connection));
     }
@@ -549,7 +551,7 @@ SQL;
  * @param  int  $lot  id лота
  * @param  int  $winner  id пользователя, выйгравшего аукцион
  *
- * @return bool true при добавлении записи, иначе false
+ * @return bool true при добавлении записи
  */
 function add_winner_to_lot(mysqli $connection, int $lot, int $winner): bool
 {
@@ -642,7 +644,7 @@ SQL;
 /**
  * Получает контакты владельца лота
  *
- * @param  mysqli  $connection  Ресурс соединения  ресурс соединения
+ * @param  mysqli  $connection  Ресурс соединения
  * @param  int  $lot_id  id лота
  *
  * @return string   Строка с контактной инфоррмацией пользователя
