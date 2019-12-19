@@ -410,3 +410,20 @@ function validate_bet_form(
 
     return null;
 }
+
+/**
+ * Проверяет наличие id категории в массиве существующих категорий
+ *
+ * @param  int  $id  id проверяемой категории
+ * @param  array  $category  массив id существующих категорий
+ *
+ * @return bool  true если id найден в массиве категорийб иначе false
+ */
+function validate_id_category(int $id, array $category): bool
+{
+    if (!in_array($id, $category)) {
+        return false;
+    }
+
+    return true;
+}

@@ -4,6 +4,8 @@ require_once('init.php');
 $cur_page = $_GET['page'] ?? 1;
 $item_per_page = 9;
 $category_id = filter_input(INPUT_GET, 'catid', FILTER_VALIDATE_INT) ?? 0;
+$cat_ids = array_column($categories, 'id');
+$category_valid = validate_id_category($category_id,$cat_ids);
 $lots_count = get_lots_by_cat_count($connection, $category_id);
 
 if (is_int($lots_count)) {
@@ -28,9 +30,18 @@ if (is_int($lots_count)) {
     $page_content = include_template('all-lots.php', [
         'categories' => $categories,
         'error'      => $lots_count,
-        'category_name' => $categories[$category_id - 1]['name'],
+        'category_name' => $categories[$category_id - 1]['name'] ?? '',
         'lots'          => null,
         'pages'         => null
+    ]);
+}
+
+if (!$category_valid) {
+    http_response_code(404);
+    $error = "Error 404 <br> Страница не найдена";
+    $page_content = include_template('404.php', [
+        'categories' => $categories,
+        'error'      => $error
     ]);
 }
 
