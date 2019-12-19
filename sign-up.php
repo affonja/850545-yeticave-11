@@ -1,8 +1,6 @@
 <?php
 require_once('init.php');
 
-$categories = get_categories($connection);
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_data = $_POST;
     $errors = validate_reg_form($connection, $user_data);

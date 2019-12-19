@@ -1,8 +1,6 @@
 <?php
 require_once('init.php');
 
-$categories = get_categories($connection);
-
 $user_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if ($user_id) {
     $lots = get_lots_where_better($connection, $user_id);

@@ -1,8 +1,6 @@
 <?php
 require_once('init.php');
 
-$categories = get_categories($connection);
-
 $lot_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$lot_id) {
     header("Location: 404.php");

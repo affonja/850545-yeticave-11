@@ -1,8 +1,6 @@
 <?php
 require_once('init.php');
 
-$categories = get_categories($connection);
-
 $cur_page = $_GET['page'] ?? 1;
 $item_per_page = 9;
 $category_id = filter_input(INPUT_GET, 'catid', FILTER_VALIDATE_INT) ?? 0;

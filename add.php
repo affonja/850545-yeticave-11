@@ -1,7 +1,6 @@
 <?php
 require_once('init.php');
 
-$categories = get_categories($connection);
 $cat_ids = array_column($categories, 'id');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -2,7 +2,6 @@
 require_once('init.php');
 require_once('getwinner.php');
 
-$categories = get_categories($connection);
 $limit = 9;
 
 $lots = get_active_lots($connection, $limit);

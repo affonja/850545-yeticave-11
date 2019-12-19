@@ -17,7 +17,7 @@ require_once('functions/validation.php');
 require_once('functions/other.php');
 
 $connection = db_connect($config['db']);
+$categories = get_categories($connection);
 
 $error = '';
-$categories = [];
 $page_content = '';
