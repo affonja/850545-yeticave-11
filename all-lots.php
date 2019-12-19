@@ -38,7 +38,8 @@ if (is_int($lots_count)) {
 
 if (!$category_valid) {
     http_response_code(404);
-    $error = "Error 404 <br> Страница не найдена";
+    $error['header'] = '404 Страница не найдена';
+    $error['message'] = '';
     $page_content = include_template('404.php', [
         'categories' => $categories,
         'error'      => $error

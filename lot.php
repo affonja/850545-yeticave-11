@@ -1,15 +1,7 @@
 <?php
 require_once('init.php');
 
-$lot_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-if (!$lot_id) {
-    header("Location: 404.php");
-    $error = 'Лот не найден';
-    $page_content = include_template('404.php', [
-        'error'      => $error,
-        'categories' => $categories
-    ]);
-}
+$lot_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?? 0;
 
 $lot = get_lot($connection, $lot_id);
 $bets = get_bets_for_lot($connection, $lot_id);
@@ -27,9 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 }
 
-if (!$lot) {
+if (!$lot or !$lot_id) {
     http_response_code(404);
-    $error = 'Лот не найден';
+    $error['header'] = '404 Страница не найдена';
+    $error['message'] = '';
     $page_content = include_template('404.php', [
         'error'      => $error,
         'categories' => $categories

@@ -19,5 +19,8 @@ require_once('functions/other.php');
 $connection = db_connect($config['db']);
 $categories = get_categories($connection);
 
-$error = '';
+$error = [
+    'header'  => '',
+    'message' => ''
+];
 $page_content = '';

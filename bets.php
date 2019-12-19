@@ -16,7 +16,6 @@ if ($user_id) {
     }
 
     $page_content = include_template('my-bets.php', [
-        'error'      => $error,
         'categories' => $categories,
         'lots'       => $lots,
         'user_id'    => $user_id,
@@ -25,7 +24,8 @@ if ($user_id) {
     ]);
 } else {
     http_response_code(404);
-    $error = 'Пользователь не найден';
+    $error['header'] = '404 Страница не найдена';
+    $error['message'] = '';
     $page_content = include_template('404.php', [
         'error'      => $error,
         'categories' => $categories
@@ -34,7 +34,8 @@ if ($user_id) {
 
 if (!isset($_SESSION['id']) or $_SESSION['id'] !== $user_id) {
     http_response_code(403);
-    $error = "Error 403 <br> Доступ запрещен";
+    $error['header'] = '403 Доступ запрещен';
+    $error['message'] = 'Пройдите авторизацию';
     $page_content = include_template('404.php', [
         'categories' => $categories,
         'error'      => $error

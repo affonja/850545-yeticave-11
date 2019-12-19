@@ -22,14 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     $page_content = include_template('add-lot.php', [
-        'categories' => $categories,
-        'errors'     => $error
+        'categories' => $categories
     ]);
 }
 
 if (!isset($_SESSION['user'])) {
     http_response_code(403);
-    $error = "Error 403 <br> Доступ запрещен";
+    $error['header'] = '403 Доступ запрещен';
+    $error['message'] = 'Пройдите авторизацию';
     $page_content = include_template('404.php', [
         'categories' => $categories,
         'error'      => $error

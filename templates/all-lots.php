@@ -1,9 +1,9 @@
 <?php
 /**
  * @var string $category_name
- * @var array $lots
+ * @var array|null $lots
  * @var string $error
- * @var array $pages
+ * @var array|null $pages
  * @var int $cur_page
  * @var int $category_id
  */
