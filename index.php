@@ -3,7 +3,6 @@ require_once('init.php');
 require_once('getwinner.php');
 
 $limit = 9;
-
 $lots = get_active_lots($connection, $limit);
 foreach ($lots as &$lot) {
     $lot['bet_count'] = get_count_bets_for_lot($connection, $lot['id']);

@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'user' => $user['name'],
                 'id'   => $user['id']
             ];
-            header("Location: index.php");
+            header("Location: /index.php");
             exit();
         }
     }

@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = validate_reg_form($connection, $user_data);
 
     if (count($errors)) {
-        $page_content = include_template('/sign-up.php', [
+        $page_content = include_template('sign-up.php', [
             'categories' => $categories,
             'errors'     => $errors
         ]);
