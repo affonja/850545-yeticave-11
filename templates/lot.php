@@ -1,28 +1,30 @@
 <?php
 /**
+ * @var array $categories
  * @var array $lot
- * @var $error_bet
+ * @var array|null $error_bet
+ * @var array $bets
+ * @var int $last_better
  */
 ?>
 
 <?= include_template('nav.php', ['categories' => $categories]) ?>
 <section class="lot-item container">
-    <h2><?= $lot['name']; ?></h2>
+    <h2><?= strip_tags($lot['name']); ?></h2>
     <div class="lot-item__content">
         <div class="lot-item__left">
             <div class="lot-item__image">
                 <img src="<?= $lot['img']; ?>" width="730" height="548"
-                     alt="<?= $lot['name']; ?>">
+                     alt="<?= strip_tags($lot['name']); ?>">
             </div>
             <p class="lot-item__category">Категория:
                 <span><?= $lot['category']; ?></span></p>
-            <p class="lot-item__description"><?= $lot['description']; ?></p>
+            <p class="lot-item__description"><?= strip_tags($lot['description']); ?></p>
         </div>
         <div class="lot-item__right">
-            <?php $timer = get_timer_state($lot); ?>
             <div class="lot-item__state">
-                <div class="lot-item__timer timer <?= $timer['state']; ?>">
-                    <?= $timer['message']; ?>                </div>
+                <?= include_template('timer.php',
+                    ['lot' => $lot, 'timer_class' => 'lot-item__timer']); ?>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount">Текущая цена</span>
@@ -41,11 +43,13 @@
                 <?php
                 if (
                     !isset($_SESSION['user']) or
-                    $timer['class'] !== ''
+                    $lot['end_time'] < date('Y-m-d H:m:i') or
+                    $lot['owner_id'] === (int)$_SESSION['id'] or
+                    $last_better === (int)$_SESSION['id']
                 ) {
                     $classname = 'visually-hidden';
                 } ?>
-                <form class="lot-item__form <?= $classname; ?>"
+                <form class="lot-item__form <?= $classname ?? ''; ?>"
                       action="/lot.php?id=<?= $lot['id']; ?>" method="post"
                       autocomplete="off">
                     <?php $classname = $error_bet === null ? ''
@@ -54,7 +58,8 @@
                         <label for="cost">Ваша ставка</label>
                         <input id="cost" type="text" name="cost"
                                placeholder="<?= price_format($lot['min_next_bet']); ?>">
-                        <span class="form__error"><?= $error_bet; ?></span>
+                        <span class="form__error"><?= $error_bet ??
+                            ''; ?></span>
                     </p>
                     <button type="submit" class="button">Сделать ставку</button>
                 </form>

@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Получает оставшееся время в формате hh:mm на основе указанного времени
+ * окончания размещения лота
+ *
+ * @param  string  $time  Время окончания размещения лота
+ *
+ * @return array
+ * Массив [
+ *  ['h']   - количество часов
+ *  ['m']   - количество минут
+ *  ['diff']- оставшееся время в секундах
+ * ]
+ */
 function get_time_remaining(string $time): array
 {
     $time_now = time();
@@ -10,15 +23,21 @@ function get_time_remaining(string $time): array
     }
 
     $time_remaining = [
-        'h'    => floor(($time_diff % 86400) / 3600),
+        'h'    => floor($time_diff / 3600),
         'm'    => floor(($time_diff % 3600) / 60),
-        'd'    => floor($time_diff / 86400),
         'diff' => $time_diff
     ];
 
     return $time_remaining;
 }
 
+/**
+ * Форматирует число, отделяет пробелом каждые три разряда с конца числа
+ *
+ * @param  int  $price  Число
+ *
+ * @return string   Отформатированное число
+ */
 function price_format(int $price): string
 {
     $price = ceil($price);
@@ -29,6 +48,13 @@ function price_format(int $price): string
     return $price;
 }
 
+/**
+ * Сохраняет загруженный файл из формы в /uploads/ с присвоением уникального имени
+ *
+ * @param  array  $lot_img  Данные загруженного файла
+ *
+ * @return string   Ссылка на сохраненный файл
+ */
 function save_file(array $lot_img): string
 {
     $file_name = $lot_img['name'];
@@ -40,39 +66,25 @@ function save_file(array $lot_img): string
     return $link;
 }
 
-function get_timer_state(array $lot, int $user_id = 0, $win_bets = []): array
-{
-    $time_remaining = get_time_remaining($lot['end_time']);
-    $timer = [
-        'state'   => '',
-        'message' =>
-            sprintf("%02d", $time_remaining['d']).':'
-            .sprintf("%02d", $time_remaining['h']).':'
-            .sprintf("%02d", $time_remaining['m']),
-        'class'   => ''
-    ];
-
-    if ($time_remaining['diff'] === 0) {
-        $timer['state'] = 'timer--end';
-        $timer['message'] = 'Торги окончены';
-        $timer['class'] = 'rates__item--end';
-        if (isset($lot['bet_id']) and in_array($lot['bet_id'], $win_bets)) {
-            $timer['state'] = 'timer--win';
-            $timer['message'] = 'Ставка выиграла';
-            $timer['class'] = 'rates__item--win';
-        }
-    } elseif ($time_remaining['diff'] < 3600) {
-        $timer['state'] = 'timer--finishing';
-    }
-
-    return $timer;
-}
-
+/**
+ * Формирует строку для периода, прошедшего с указанного времени.
+ * В зависимости от прошедшего времени формирует строки
+ *  'n секунд(а/ы) назад'
+ *  'n минут(а/ы) назад'
+ *  'n час(а/ов) назад'
+ *  'Вчера в hh:mm'
+ *  'dd.mm.yy в hh:mm'
+ *
+ * @param  string  $bets_creation_time  время, от которого считается период
+ *
+ * @return string   Сформированная строка
+ */
 function get_bet_timeback(string $bets_creation_time): string
 {
     $now = time();
     $bet_time = strtotime($bets_creation_time);
     $diff_time = $now - $bet_time;
+    $time_back = '';
     if ($diff_time < 59) {
         $time_back = $diff_time.' '.get_noun_plural_form($diff_time,
                 'секунда', 'секунды', 'секунд').' назад';

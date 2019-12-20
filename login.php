@@ -1,10 +1,8 @@
 <?php
 require_once('init.php');
 
-$categories = get_categories($connection);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_data = get_user_form_login_data($_POST);
+    $user_data = $_POST;
     $errors = validate_login_form($connection, $user_data);
 
     if (count($errors)) {
@@ -19,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'user' => $user['name'],
                 'id'   => $user['id']
             ];
-            header("Location: index.php");
+            header("Location: /index.php");
             exit();
         }
     }

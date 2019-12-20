@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Валидирует данные полученные из формы
+ *
+ * @param  array  $lot_data  Массив с данными из формы
+ * @param  array  $file_data  Массив данных загруженного файла
+ * @param  array  $cat_ids  Массив с существующими категориями товаров
+ *
+ * @return array    Массив с текстом ошибок валидации
+ */
 function validate_lot_form(array $lot_data, $file_data, array $cat_ids): array
 {
     $errors = [];
@@ -16,6 +25,15 @@ function validate_lot_form(array $lot_data, $file_data, array $cat_ids): array
     return $errors;
 }
 
+/**
+ * Проверяет полученную строку на критерии:
+ *  - существующее значение
+ *  - минимальная и максимальная длина
+ *
+ * @param  string  $name  проверяемая строка
+ *
+ * @return string|null  Текст ошибки или null, если строка соответствует критериям
+ */
 function validate_lot_name(string $name): ?string
 {
     if (!$name) {
@@ -31,6 +49,14 @@ function validate_lot_name(string $name): ?string
     return null;
 }
 
+/**
+ * Проверяет наличие id категории в массиве существующих категорий
+ *
+ * @param  string  $category  id проверяемой категории
+ * @param  array  $category_list  массив id существующих категорий
+ *
+ * @return string|null  Текст ошибки или null, если id найден в массиве категорий
+ */
 function validate_lot_category(string $category, array $category_list): ?string
 {
     if (!in_array($category, $category_list)) {
@@ -40,6 +66,17 @@ function validate_lot_category(string $category, array $category_list): ?string
     return null;
 }
 
+/**
+ * Проверяет значение полученной строки на критерии:
+ *  -   существующее значение
+ *  -   минимальная и максимальная длина
+ *
+ * @param  string  $message  Проверяемая строка
+ * @param  int  $min  минимальное значение длины строки
+ * @param  int  $max  максимальное значение длины строки
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_lot_message(string $message, int $min, int $max): ?string
 {
     if (!$message) {
@@ -53,6 +90,15 @@ function validate_lot_message(string $message, int $min, int $max): ?string
     return null;
 }
 
+/**
+ * Проверяет значение полученной суммы на критерии:
+ *  -   значение больше 0
+ *  -   значение заполненно
+ *
+ * @param  int  $rate  проверяемое число
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_lot_rate(int $rate): ?string
 {
     if (!$rate or $rate < 0) {
@@ -62,6 +108,15 @@ function validate_lot_rate(int $rate): ?string
     return null;
 }
 
+/**
+ * Проверяет значение полученной суммы на критерии:
+ *  -   значение больше 0
+ *  -   значение заполненно
+ *
+ * @param  int  $step  проверяемое число
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_lot_step(int $step): ?string
 {
     if (!$step or $step < 0) {
@@ -71,6 +126,16 @@ function validate_lot_step(int $step): ?string
     return null;
 }
 
+/**
+ * Проверяет значение полученной даты на критерии:
+ *  -   значение заполненно
+ *  -   дата больше текущей не меньше чем на $interval
+ *
+ * @param  string  $date  проверяемая дата
+ * @param  string  $interval  минимальный интервал
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_lot_date(string $date, string $interval): ?string
 {
     if (!$date) {
@@ -86,6 +151,16 @@ function validate_lot_date(string $date, string $interval): ?string
     return null;
 }
 
+/**
+ * Проверяет загруженный файл на критерии:
+ *  -   файл загружен
+ *  -   соответствие файла допустимым MIME-форматам
+ *      (допустимые форматы в массиве $allow_type)
+ *
+ * @param  array  $file_data  массив с данными загруженного файла
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_lot_file(array $file_data): ?string
 {
     if ($file_data['size'] === 0) {
@@ -104,7 +179,15 @@ function validate_lot_file(array $file_data): ?string
     return null;
 }
 
-function validate_reg_form(mysqli $connection, array $user_data): array
+/**
+ *Валидирует данные полученные из формы регистрации пользователя
+ *
+ * @param  mysqli  $connection  Ресурс соединения
+ * @param  array  $user_data  Данные из формы
+ *
+ * @return array  Массив с текстом ошибок валидации
+ */
+function validate_reg_form(mysqli $connection, array &$user_data): array
 {
     $errors = [];
     $errors['email'] = validate_email($connection, $user_data['email']);
@@ -116,11 +199,28 @@ function validate_reg_form(mysqli $connection, array $user_data): array
     return $errors;
 }
 
-function validate_email(mysqli $connection, $email): ?string
+/**
+ * Проверяет строку с полученным email на соответствие критериям:
+ * -    поле заполнено
+ * -    email соответствует формату email
+ * -    email не существует в базе данных
+ *
+ * @param  mysqli  $connection  Ресурс соединения
+ * @param  string  $email  Проверяемый email
+ *
+ * @return string|null Текст ошибки или null, если соответствует критериям
+ */
+function validate_email(mysqli $connection, string &$email): ?string
 {
-    if (!$email) {
+    if (empty($email)) {
         return 'Заполните поле';
+    } else {
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+        if (!$email) {
+            return 'Некорректный email';
+        }
     }
+
     $email_is_double = get_email($connection, $email);
     if ($email_is_double) {
         return 'Такой email уже зарегистрирован';
@@ -129,17 +229,35 @@ function validate_email(mysqli $connection, $email): ?string
     return null;
 }
 
+/**
+ * Проверяет строку на соответствие критериям:
+ * -    поле заполнено
+ * -    длинна не меннее 6 символов
+ *
+ * @param  string  $pass  Проверяемая строка
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_pass(string $pass): ?string
 {
     if (!$pass) {
         return 'Заполните поле';
     } elseif (mb_strlen($pass) < 6) {
-        return 'Слишком короткий пароль';
+        return 'Слишком короткий пароль. Минимум 6 символов';
     }
 
     return null;
 }
 
+/**
+ * Проверяет имя пользователя на на соответствие критериям:
+ *  -   поле заполнено
+ *  -   минимальная и максимальная длина строки
+ *
+ * @param  string  $name  Имя пользователя
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_user_name(string $name): ?string
 {
     if (!$name) {
@@ -155,6 +273,17 @@ function validate_user_name(string $name): ?string
     return null;
 }
 
+/**
+ * Проверяет строку на на соответствие критериям:
+ *  -   поле заполнено
+ *  -   минимальная и максимальная длина строки
+ *
+ * @param  string  $message  Проверяемая строка
+ * @param  int  $min  Минимальная длина строки
+ * @param  int  $max  Максимальная длина строки
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_contacts(string $message, int $min, int $max): ?string
 {
     if (!$message) {
@@ -168,7 +297,15 @@ function validate_contacts(string $message, int $min, int $max): ?string
     return null;
 }
 
-function validate_login_form(mysqli $connection, array $user_data): array
+/**
+ * Валидирует данные полученные из формы входа
+ *
+ * @param  mysqli  $connection  Ресурс соединения
+ * @param  array  $user_data  Данные из формы
+ *
+ * @return array     Массив с текстом ошибок валидации
+ */
+function validate_login_form(mysqli $connection, array &$user_data): array
 {
     $errors = [];
     $errors['email'] = validate_email_exist($connection, $user_data['email']);
@@ -182,11 +319,28 @@ function validate_login_form(mysqli $connection, array $user_data): array
     return $errors;
 }
 
-function validate_email_exist(mysqli $connection, string $email): ?string
+/**
+ * Проверяет строку с полученным email на соответствие критериям:
+ * -    поле заполнено
+ * -    email соответствует формату email
+ * -    email существует в базе данных
+ *
+ * @param  mysqli  $connection  Ресурс соединения
+ * @param  string  $email  Проверяемый email
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
+function validate_email_exist(mysqli $connection, string &$email): ?string
 {
-    if (!$email) {
+    if (empty($email)) {
         return 'Заполните поле';
+    } else {
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+        if (!$email) {
+            return 'Некорректный email';
+        }
     }
+
     $email_exist = get_email($connection, $email);
     if (!$email_exist) {
         return 'Такой email не зарегистрирован';
@@ -195,6 +349,15 @@ function validate_email_exist(mysqli $connection, string $email): ?string
     return null;
 }
 
+/**
+ * Проверяет полученный из формы пароль на соответствие в базе данных
+ *
+ * @param  mysqli  $connection  Ресурс соединения
+ * @param  string  $email  email пользователя
+ * @param  string  $pass  Проверяемый пароль
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
 function validate_email_pass(
     mysqli $connection,
     string $email,
@@ -210,4 +373,57 @@ function validate_email_pass(
     }
 
     return null;
+}
+
+/**
+ * Валидирует данные полученные при добавлении новой ставки на критерии:
+ *  -   значение заполнено
+ *  -   сумма ставки больше минимально допустимой
+ *  -   пользователь не является владельцем лота
+ *  -   пользователь отличается от владельца последней ставки
+ *
+ * @param  string  $bet  Сумма текущей ставки
+ * @param  int  $min_bet  Минимально допустимая сумма ставки
+ * @param  int  $owner  Владелец лота
+ * @param  int  $last_better  Пользователь, сделавший последнюю ставку
+ * @param  int  $user  Пользователь, сделавший текущую ставку
+ *
+ * @return string|null  Текст ошибки или null, если соответствует критериям
+ */
+function validate_bet_form(
+    string $bet,
+    int $min_bet,
+    int $owner,
+    int $last_better,
+    int $user = 0
+): ?string {
+    if (!$bet) {
+        return $error_bet = 'Введите сумму ставки';
+    } elseif ($bet < $min_bet) {
+        return $error_bet = 'Введите корректную сумму';
+    } elseif (
+        $user === $owner or
+        $user === $last_better
+    ) {
+        return $error_bet = 'Вы не можете сделать ставку';
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет наличие id категории в массиве существующих категорий
+ *
+ * @param  int  $id  id проверяемой категории
+ * @param  array  $category  массив id существующих категорий
+ *
+ * @return bool  true если id найден в массиве категорийб иначе false
+ */
+function validate_id_category(int $id, array $category): bool
+{
+    if (!in_array($id, $category)) {
+        return false;
+    }
+
+    return true;
 }

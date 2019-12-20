@@ -1,9 +1,11 @@
 <?php
 /**
  * @var string $category_name
+ * @var array|null $lots
+ * @var string $error
+ * @var array|null $pages
  * @var int $cur_page
- * @var array $lots
- * @var array $pages
+ * @var int $category_id
  */
 ?>
 

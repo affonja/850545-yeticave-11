@@ -1,6 +1,7 @@
 <?php
 /**
  * @var array $errors
+ * @var array $categories
  */
 ?>
 
@@ -9,6 +10,7 @@
 <form class="form container  <?= $classname; ?>" action="/login.php"
       method="post">
     <h2>Вход</h2>
+    <span class="form__error form__error--bottom">Вы ввели некорректный email/пароль</span>
     <?php $classname = isset($errors['email']) ? "form__item--invalid"
         : ""; ?>
     <div class="form__item <?= $classname; ?>">

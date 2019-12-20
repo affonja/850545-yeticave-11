@@ -1,0 +1,10 @@
+{
+    "name": "affonja/yeticave",
+    "description": "testproject",
+    "type": "project",
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0",
+      "ext-mysqli": "*",
+      "ext-fileinfo": "*"
+    }
+}

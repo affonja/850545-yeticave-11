@@ -1,12 +1,11 @@
 <?php
 require_once('init.php');
 
-$categories = get_categories($connection);
 $cat_ids = array_column($categories, 'id');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $file_data = $_FILES['lot_img'];
-    $lot_data = get_lot_form_data($_POST);
+    $lot_data = get_lot_form_data($_POST, $_SESSION['id']);
     $errors = validate_lot_form($lot_data, $file_data, $cat_ids);
 
     if (count($errors)) {
@@ -23,14 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     $page_content = include_template('add-lot.php', [
-        'categories' => $categories,
-        'errors'     => $error
+        'categories' => $categories
     ]);
 }
 
 if (!isset($_SESSION['user'])) {
     http_response_code(403);
-    $error = "Error 403 <br> Доступ запрещен";
+    $error['header'] = '403 Доступ запрещен';
+    $error['message'] = 'Пройдите авторизацию';
     $page_content = include_template('404.php', [
         'categories' => $categories,
         'error'      => $error

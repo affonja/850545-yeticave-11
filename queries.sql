@@ -61,8 +61,8 @@
 	INNER JOIN categories c ON l.category_id = c.id
 	LEFT JOIN bets b ON l.id = b.lot_id
 	WHERE l.end_time > NOW()
-    GROUP BY l.id
-	ORDER BY l.creation_time DESC LIMIT 3
+    GROUP BY l.id, l.creation_time
+	ORDER BY l.creation_time DESC LIMIT 3;
 
 # показать лот по его id. Получите также название категории, к которой принадлежит лот;
 	SELECT
