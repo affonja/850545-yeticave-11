@@ -2,7 +2,7 @@
 /**
  * @var array $categories
  * @var array $lot
- * @var array $error_bet
+ * @var array|null $error_bet
  * @var array $bets
  * @var int $last_better
  */
@@ -23,7 +23,8 @@
         </div>
         <div class="lot-item__right">
             <div class="lot-item__state">
-                <?= include_template('timer.php', ['lot' => $lot, 'timer_class' => 'lot-item__timer']); ?>
+                <?= include_template('timer.php',
+                    ['lot' => $lot, 'timer_class' => 'lot-item__timer']); ?>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount">Текущая цена</span>
@@ -57,7 +58,8 @@
                         <label for="cost">Ваша ставка</label>
                         <input id="cost" type="text" name="cost"
                                placeholder="<?= price_format($lot['min_next_bet']); ?>">
-                        <span class="form__error"><?= $error_bet; ?></span>
+                        <span class="form__error"><?= $error_bet ??
+                            ''; ?></span>
                     </p>
                     <button type="submit" class="button">Сделать ставку</button>
                 </form>

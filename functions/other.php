@@ -84,6 +84,7 @@ function get_bet_timeback(string $bets_creation_time): string
     $now = time();
     $bet_time = strtotime($bets_creation_time);
     $diff_time = $now - $bet_time;
+    $time_back = '';
     if ($diff_time < 59) {
         $time_back = $diff_time.' '.get_noun_plural_form($diff_time,
                 'секунда', 'секунды', 'секунд').' назад';
@@ -102,5 +103,5 @@ function get_bet_timeback(string $bets_creation_time): string
         $time_back = date('d.m.y в H:i', $bet_time);
     }
 
-    return $time_back ?? '';
+    return $time_back;
 }
