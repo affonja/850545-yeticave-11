@@ -1,5 +1,8 @@
 <?php
 require_once('init.php');
+if (!file_exists('vendor/autoload.php')) {
+    exit('Выполнител команду composer install');
+}
 require_once('vendor/autoload.php');
 
 $lots = get_expired_lots_without_win($connection);
