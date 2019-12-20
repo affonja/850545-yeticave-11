@@ -9,6 +9,5 @@ Thumbs.db
 vendor
 uploads/*
 !uploads/.gitkeep
-/test/
 test/*
-/config/config.php
+config/config.php

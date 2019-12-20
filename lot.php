@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         add_bet($connection, (int)$bet, $lot_id, $_SESSION['id']);
         $lot = get_lot($connection, $lot_id);
         $bets = get_bets_for_lot($connection, $lot_id);
+        $last_better = $bets[0]['user_id'];
     }
 }
 
