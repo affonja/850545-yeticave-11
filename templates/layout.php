@@ -14,7 +14,7 @@
     <link href="../css/normalize.min.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <?php
-    if ($_SERVER['PHP_SELF'] == '/add.php') {
+    if ($_SERVER['PHP_SELF'] === '/add.php') {
         echo '<link href="../css/flatpickr.min.css" rel="stylesheet">';
     }; ?>
 </head>
@@ -71,7 +71,7 @@
     </header>
 
     <main class="<?php
-    if ($_SERVER['PHP_SELF'] == '/index.php') {
+    if ($_SERVER['PHP_SELF'] === '/index.php') {
         echo 'container';
     }; ?>"><?= $page_content; ?></main>
 </div>

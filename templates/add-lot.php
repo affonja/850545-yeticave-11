@@ -32,7 +32,7 @@
                     <option
                         <?= 'value="'.$category['id'].'"'; ?>
                         <?php if ($category['id']
-                            == get_post_val('category')
+                            === get_post_val('category')
                         ): ?>
                             selected
                         <?php endif; ?>

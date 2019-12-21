@@ -1,7 +1,7 @@
 <?php
 require_once('init.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_data = $_POST;
     $errors = validate_reg_form($connection, $user_data);
 
