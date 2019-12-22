@@ -3,7 +3,7 @@
  * @var string $category_name
  * @var array|null $lots
  * @var string $error
- * @var array|null $pages
+ * @var array $pages
  * @var int $cur_page
  * @var int $category_id
  */
