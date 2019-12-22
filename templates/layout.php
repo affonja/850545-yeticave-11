@@ -53,7 +53,7 @@
                            href="/bets.php?id=<?= $_SESSION['id']; ?>">Мои
                             ставки</a>
                         <a class="user-menu__logout"
-                           href="/logaut.php">Выход</a>
+                           href="/logout.php">Выход</a>
                     </div>
                 <?php else : ?>
                     <ul class="user-menu__list">
