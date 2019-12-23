@@ -26,13 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 }
 
-if (!isset($_SESSION['user'])) {
+$session_id = isset($_SESSION['id']);
+$access_error = validation_access_right($session_id, false,
+    'Пройдите авторизацию');
+
+if ($access_error) {
     http_response_code(403);
-    $error['header'] = '403 Доступ запрещен';
-    $error['message'] = 'Пройдите авторизацию';
     $page_content = include_template('404.php', [
         'categories' => $categories,
-        'error'      => $error
+        'error'      => $access_error
     ]);
 }
 

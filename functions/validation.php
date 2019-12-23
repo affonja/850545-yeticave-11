@@ -427,3 +427,26 @@ function validate_id_category(int $id, array $category): bool
 
     return true;
 }
+
+/**
+ * Проверяет, разрешен ли пользователь доступ к странице
+ *
+ * @param  bool  $session_id  true если сессия открыта и используется допустимый id пользователя
+ * @param  bool  $condition  условие при котором доступ пользователю запрещен
+ * @param  string  $message  сообщение для пользователя, н-р, 'Пройдите авторизацию'
+ *
+ * @return array|null   Массив с сообщениями об ошибке, если пользователь не имеет прав доступа, иначе null
+ */
+function validation_access_right(
+    bool $session_id,
+    bool $condition,
+    string $message
+): ?array {
+    if ($session_id === $condition) {
+        $error['header'] = '403 Доступ запрещен';
+        $error['message'] = $message;
+        return $error;
+    }
+
+    return null;
+}
