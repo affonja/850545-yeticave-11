@@ -14,7 +14,7 @@
     <link href="../css/normalize.min.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <?php
-    if ($_SERVER['PHP_SELF'] == '/add.php') {
+    if ($_SERVER['PHP_SELF'] === '/add.php') {
         echo '<link href="../css/flatpickr.min.css" rel="stylesheet">';
     }; ?>
 </head>
@@ -53,7 +53,7 @@
                            href="/bets.php?id=<?= $_SESSION['id']; ?>">Мои
                             ставки</a>
                         <a class="user-menu__logout"
-                           href="/logaut.php">Выход</a>
+                           href="/logout.php">Выход</a>
                     </div>
                 <?php else : ?>
                     <ul class="user-menu__list">
@@ -71,7 +71,7 @@
     </header>
 
     <main class="<?php
-    if ($_SERVER['PHP_SELF'] == '/index.php') {
+    if ($_SERVER['PHP_SELF'] === '/index.php') {
         echo 'container';
     }; ?>"><?= $page_content; ?></main>
 </div>

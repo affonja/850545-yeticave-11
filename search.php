@@ -1,7 +1,7 @@
 <?php
 require_once('init.php');
 
-$cur_page = $_GET['page'] ?? 1;
+$cur_page = (int)($_GET['page'] ?? 1);
 $item_per_page = 9;
 $search_query = trim($_GET['search']) ?? '';
 $lots_count = get_search_lots_count($connection, $search_query);

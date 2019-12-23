@@ -28,6 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 }
 
+if (isset($_SESSION['id'])) {
+    http_response_code(403);
+    $error['header'] = '403 Доступ запрещен';
+    $error['message'] = 'Вход на сайт уже выполнен';
+    $page_content = include_template('404.php', [
+        'categories' => $categories,
+        'error'      => $error
+    ]);
+}
+
 print(include_template('layout.php', [
     'page_title'   => 'Вход на сайт',
     'page_content' => $page_content,
